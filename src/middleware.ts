@@ -1,8 +1,18 @@
 import { HttpTypes } from "@medusajs/types"
 import { NextRequest, NextResponse } from "next/server"
 
-const BACKEND_URL = process.env.MEDUSA_BACKEND_URL
-const PUBLISHABLE_API_KEY = process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY
+// Function to get backend URL at runtime
+const getBackendUrl = () => {
+  return process.env.MEDUSA_BACKEND_URL
+}
+
+// Function to get publishable key at runtime
+const getPublishableKey = () => {
+  const key = process.env.MEDUSA_PUBLISHABLE_KEY || process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY
+  console.log("============= Medusa Publishable Key: ============== ", key)
+  return key
+}
+
 const DEFAULT_REGION = process.env.NEXT_PUBLIC_DEFAULT_REGION || "us"
 
 const regionMapCache = {
@@ -12,6 +22,8 @@ const regionMapCache = {
 
 async function getRegionMap(cacheId: string) {
   const { regionMap, regionMapUpdated } = regionMapCache
+
+  const BACKEND_URL = getBackendUrl()
 
   if (!BACKEND_URL) {
     throw new Error(
@@ -26,7 +38,7 @@ async function getRegionMap(cacheId: string) {
     // Fetch regions from Medusa. We can't use the JS client here because middleware is running on Edge and the client needs a Node environment.
     const { regions } = await fetch(`${BACKEND_URL}/store/regions`, {
       headers: {
-        "x-publishable-api-key": PUBLISHABLE_API_KEY!,
+        "x-publishable-api-key": getPublishableKey()!,
       },
       next: {
         revalidate: 3600,

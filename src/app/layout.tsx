@@ -1,5 +1,7 @@
 import { getBaseURL } from "@lib/util/env"
 import { Metadata } from "next"
+import { ThemeProvider } from "@lib/theme/ThemeProvider"
+import { ToastProvider } from "@modules/common/components/toast"
 import "styles/globals.css"
 
 export const metadata: Metadata = {
@@ -10,7 +12,11 @@ export default function RootLayout(props: { children: React.ReactNode }) {
   return (
     <html lang="en" data-mode="light">
       <body>
-        <main className="relative">{props.children}</main>
+        <ThemeProvider>
+          <ToastProvider>
+            <main className="relative">{props.children}</main>
+          </ToastProvider>
+        </ThemeProvider>
       </body>
     </html>
   )

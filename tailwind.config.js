@@ -21,6 +21,20 @@ module.exports = {
         padding: "padding-top padding-right padding-bottom padding-left",
       },
       colors: {
+        // Theme colors (from CSS variables set by ThemeProvider)
+        primary: 'var(--color-primary)',
+        'primary-hover': 'var(--color-primary-hover)',
+        'primary-text': 'var(--color-primary-text)',
+        secondary: 'var(--color-secondary)',
+        'secondary-hover': 'var(--color-secondary-hover)',
+        'secondary-text': 'var(--color-secondary-text)',
+        accent: 'var(--color-accent)',
+        success: 'var(--color-success)',
+        error: 'var(--color-error)',
+        warning: 'var(--color-warning)',
+        info: 'var(--color-info)',
+        
+        // Medusa grey scale (keep for Medusa UI components)
         grey: {
           0: "#FFFFFF",
           5: "#F9FAFB",
@@ -42,9 +56,23 @@ module.exports = {
         rounded: "8px",
         large: "16px",
         circle: "9999px",
+        // Theme-aware border radius
+        'theme-sm': 'var(--border-radius-sm)',
+        'theme-md': 'var(--border-radius-md)',
+        'theme-lg': 'var(--border-radius-lg)',
+        'theme-full': 'var(--border-radius-full)',
+      },
+      spacing: {
+        // Theme-aware spacing
+        'theme-xs': 'var(--spacing-xs)',
+        'theme-sm': 'var(--spacing-sm)',
+        'theme-md': 'var(--spacing-md)',
+        'theme-lg': 'var(--spacing-lg)',
+        'theme-xl': 'var(--spacing-xl)',
       },
       maxWidth: {
         "8xl": "100rem",
+        "container": "var(--container-width)", // Theme-aware container
       },
       screens: {
         "2xsmall": "320px",
@@ -57,6 +85,15 @@ module.exports = {
       },
       fontSize: {
         "3xl": "2rem",
+        // Theme-aware font sizes
+        'theme-xs': 'var(--font-size-xs)',
+        'theme-sm': 'var(--font-size-sm)',
+        'theme-base': 'var(--font-size-base)',
+        'theme-lg': 'var(--font-size-lg)',
+        'theme-xl': 'var(--font-size-xl)',
+        'theme-2xl': 'var(--font-size-2xl)',
+        'theme-3xl': 'var(--font-size-3xl)',
+        'theme-4xl': 'var(--font-size-4xl)',
       },
       fontFamily: {
         sans: [
@@ -69,6 +106,9 @@ module.exports = {
           "Ubuntu",
           "sans-serif",
         ],
+        // Theme-aware fonts
+        'heading': 'var(--font-heading)',
+        'body': 'var(--font-body)',
       },
       keyframes: {
         ring: {

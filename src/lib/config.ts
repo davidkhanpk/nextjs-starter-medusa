@@ -1,14 +1,39 @@
 import Medusa from "@medusajs/js-sdk"
 
-// Defaults to standard port for Medusa server
-let MEDUSA_BACKEND_URL = "http://localhost:9000"
-
-if (process.env.MEDUSA_BACKEND_URL) {
-  MEDUSA_BACKEND_URL = process.env.MEDUSA_BACKEND_URL
+// Function to get backend URL at runtime
+const getMedusaBackendUrl = () => {
+  // In production, this reads from runtime environment
+  const url =  process.env.MEDUSA_BACKEND_URL || "http://localhost:9000"
+  console.log("============= Medusa Backend URL: ============== ", url)
+  return url
 }
 
-export const sdk = new Medusa({
-  baseUrl: MEDUSA_BACKEND_URL,
-  debug: process.env.NODE_ENV === "development",
-  publishableKey: process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY,
+const getMedusaPublishableKey = () => {
+  // In production, this reads from runtime environment
+  // Prioritize MEDUSA_PUBLISHABLE_KEY for runtime flexibility
+  const key = process.env.MEDUSA_PUBLISHABLE_KEY || process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY
+  console.log("============= Medusa Publishable Key: ============== ", key)
+  return key
+}
+
+// For true runtime configuration, we need to create SDK instances on-demand
+// rather than at module load time
+let sdkInstance: Medusa | null = null
+
+export const getSDK = () => {
+  if (!sdkInstance) {
+    sdkInstance = new Medusa({
+      baseUrl: getMedusaBackendUrl(),
+      debug: process.env.NODE_ENV === "development",
+      publishableKey: getMedusaPublishableKey(),
+    })
+  }
+  return sdkInstance
+}
+
+// For backward compatibility, export as sdk
+export const sdk = new Proxy({} as Medusa, {
+  get: (target, prop) => {
+    return (getSDK() as any)[prop]
+  }
 })

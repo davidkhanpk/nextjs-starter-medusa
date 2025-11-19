@@ -1,10 +1,18 @@
+'use client'
+
 import { Button, Container, Text } from "@medusajs/ui"
-import { cookies as nextCookies } from "next/headers"
+import { useEffect, useState } from "react"
 
-async function ProductOnboardingCta() {
-  const cookies = await nextCookies()
+function ProductOnboardingCta() {
+  const [isOnboarding, setIsOnboarding] = useState(false)
 
-  const isOnboarding = cookies.get("_medusa_onboarding")?.value === "true"
+  useEffect(() => {
+    // Check for the onboarding cookie on the client side
+    const cookies = document.cookie.split('; ')
+    const onboardingCookie = cookies.find(cookie => cookie.startsWith('_medusa_onboarding='))
+    const isOnboardingValue = onboardingCookie?.split('=')[1] === 'true'
+    setIsOnboarding(isOnboardingValue)
+  }, [])
 
   if (!isOnboarding) {
     return null

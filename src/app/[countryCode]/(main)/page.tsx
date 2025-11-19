@@ -1,9 +1,8 @@
 import { Metadata } from "next"
-
-import FeaturedProducts from "@modules/home/components/featured-products"
-import Hero from "@modules/home/components/hero"
 import { listCollections } from "@lib/data/collections"
 import { getRegion } from "@lib/data/regions"
+import { getPageLayout } from "@lib/page-builder/api"
+import { DynamicSectionRenderer } from "@lib/page-builder/section-renderer"
 
 export const metadata: Metadata = {
   title: "Medusa Next.js Starter Template",
@@ -15,11 +14,9 @@ export default async function Home(props: {
   params: Promise<{ countryCode: string }>
 }) {
   const params = await props.params
-
   const { countryCode } = params
 
   const region = await getRegion(countryCode)
-
   const { collections } = await listCollections({
     fields: "id, handle, title",
   })
@@ -28,14 +25,30 @@ export default async function Home(props: {
     return null
   }
 
+  // Get dynamic page layout (supports per-store customization)
+  const pageLayout = await getPageLayout()
+
+  if (!pageLayout) {
+    return (
+      <div className="text-center py-20">
+        <p className="text-gray-500">Unable to load page layout</p>
+      </div>
+    )
+  }
+
+  // Sort sections by order
+  const sortedSections = [...pageLayout.sections].sort((a, b) => a.order - b.order)
+
   return (
     <>
-      <Hero />
-      <div className="py-12">
-        <ul className="flex flex-col gap-x-6">
-          <FeaturedProducts collections={collections} region={region} />
-        </ul>
-      </div>
+      {sortedSections.map((section) => (
+        <DynamicSectionRenderer
+          key={section.id}
+          section={section}
+          region={region}
+          collections={collections}
+        />
+      ))}
     </>
   )
 }
