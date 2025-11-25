@@ -4,6 +4,7 @@ import { listProducts } from "@lib/data/products"
 import { getRegion, listRegions } from "@lib/data/regions"
 import ProductTemplate from "@modules/products/templates"
 import { HttpTypes } from "@medusajs/types"
+import { getDefaultProductTemplate } from "@lib/template"
 
 type Props = {
   params: Promise<{ countryCode: string; handle: string }>
@@ -120,12 +121,17 @@ export default async function ProductPage(props: Props) {
     notFound()
   }
 
+  // Load product template
+  const storeId = process.env.STORE_ID || process.env.NEXT_PUBLIC_STORE_ID
+  const template = storeId ? await getDefaultProductTemplate(storeId) : null
+
   return (
     <ProductTemplate
       product={pricedProduct}
       region={region}
       countryCode={params.countryCode}
       images={images}
+      template={template}
     />
   )
 }

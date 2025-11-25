@@ -4,33 +4,29 @@ import { useState, useEffect, useRef } from 'react'
 import { ChevronDown } from '@medusajs/icons'
 import LocalizedClientLink from '@modules/common/components/localized-client-link'
 import { useTheme } from '@lib/theme/ThemeProvider'
-import { useParams } from 'next/navigation'
-
-interface Category {
-  id: string
-  name: string
-  handle: string
-  product_count?: number
-  parent_category_id?: string | null
-}
+import { HttpTypes } from '@medusajs/types'
 
 export default function CategoryNav() {
-  const [categories, setCategories] = useState<Category[]>([])
+  const [categories, setCategories] = useState<HttpTypes.StoreProductCategory[]>([])
   const [isOpen, setIsOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const dropdownRef = useRef<HTMLDivElement>(null)
   const { theme } = useTheme()
-  const params = useParams()
-  const countryCode = params?.countryCode as string || 'us'
 
-  // Fetch categories
+  // Fetch categories on mount
   useEffect(() => {
     async function fetchCategories() {
       try {
-        const response = await fetch(`/api/categories`)
+        // Use the Medusa backend URL directly
+        const backendUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL || 'http://localhost:9000'
+        const response = await fetch(`${backendUrl}/store/product-categories?limit=100&fields=id,name,handle,parent_category_id,metadata`)
+        
         if (response.ok) {
           const data = await response.json()
-          setCategories(data.product_categories || [])
+          const parentCategories = (data.product_categories || []).filter(
+            (cat: any) => !cat.parent_category_id
+          )
+          setCategories(parentCategories)
         }
       } catch (error) {
         console.error('Failed to fetch categories:', error)
@@ -70,9 +66,6 @@ export default function CategoryNav() {
     return null
   }
 
-  // Filter out child categories to only show parent categories
-  const parentCategories = categories.filter(cat => !cat.parent_category_id)
-
   return (
     <div ref={dropdownRef} className="relative">
       <button
@@ -110,7 +103,7 @@ export default function CategoryNav() {
 
           {/* Category List */}
           <div className="max-h-96 overflow-y-auto">
-            {parentCategories.map((category) => (
+            {categories.map((category) => (
               <LocalizedClientLink
                 key={category.id}
                 href={`/categories/${category.handle}`}
@@ -123,12 +116,12 @@ export default function CategoryNav() {
                 >
                   {category.name}
                 </span>
-                {category.product_count !== undefined && (
+                {category.metadata?.product_count && (
                   <span 
                     className="text-sm"
                     style={{ color: theme?.colors?.textSecondary }}
                   >
-                    ({category.product_count})
+                    ({category.metadata.product_count})
                   </span>
                 )}
               </LocalizedClientLink>

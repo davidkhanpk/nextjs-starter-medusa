@@ -206,7 +206,7 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
                       >
                         {product.title}
                       </div>
-                      {price && (
+                      {price && price.calculated_amount !== null && price.currency_code && (
                         <div 
                           className="text-sm"
                           style={{ color: theme?.colors?.textSecondary || '#6b7280' }}

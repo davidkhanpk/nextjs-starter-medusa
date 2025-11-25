@@ -1,5 +1,5 @@
 import { HttpTypes } from '@medusajs/types'
-import { getProductsList } from '@lib/data/products'
+import { listProducts } from '@lib/data/products'
 
 /**
  * Fetch products from a specific category
@@ -10,7 +10,7 @@ export async function getCategoryProducts(
   limit: number = 8
 ): Promise<HttpTypes.StoreProduct[]> {
   try {
-    const { products } = await getProductsList({
+    const { response } = await listProducts({
       queryParams: {
         limit,
         fields: '*variants.calculated_price',
@@ -20,7 +20,7 @@ export async function getCategoryProducts(
       countryCode: region.countries[0]?.iso_2 || 'us',
     })
 
-    return products
+    return response.products
   } catch (error) {
     console.error('Error fetching category products:', error)
     return []

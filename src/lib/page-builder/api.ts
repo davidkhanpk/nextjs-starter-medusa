@@ -6,13 +6,13 @@ import { PageLayout } from './types'
 export async function getPageLayout(storeId?: string): Promise<PageLayout | null> {
   try {
     // Get store ID from environment variable
-    const actualStoreId = storeId || process.env.STORE_ID || 'default'
+    const actualStoreId = storeId || process.env.NEXT_PUBLIC_STORE_ID || 'default'
     
-    // Fetch from Shopikool API
-    const shopikoolUrl = process.env.SHOPIKOOL_API_URL || 'http://localhost:3000'
+    // Fetch from Shopikool Backend API
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3001'
     
     const response = await fetch(
-      `${shopikoolUrl}/api/stores/${actualStoreId}/homepage-layout`,
+      `${backendUrl}/stores/${actualStoreId}/pages/default/HOME`,
       {
         next: {
           tags: ['page-layout'],
@@ -24,15 +24,16 @@ export async function getPageLayout(storeId?: string): Promise<PageLayout | null
     if (response.ok) {
       const data = await response.json()
       return {
-        id: actualStoreId,
-        name: 'Store Homepage',
+        id: data.id || actualStoreId,
+        name: data.pageName || 'Homepage',
         sections: data.sections || [],
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+        createdAt: data.createdAt || new Date().toISOString(),
+        updatedAt: data.updatedAt || new Date().toISOString(),
       }
     }
 
     // Fallback to default layout
+    console.log('No homepage found in backend, using default layout')
     return getDefaultLayout()
   } catch (error) {
     console.error('Error fetching page layout:', error)

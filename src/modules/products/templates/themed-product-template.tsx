@@ -16,14 +16,30 @@ type ThemedProductTemplateProps = {
   product: HttpTypes.StoreProduct
   region: HttpTypes.StoreRegion
   countryCode: string
+  template?: any
 }
 
 const ThemedProductTemplate: React.FC<ThemedProductTemplateProps> = ({
   product,
   region,
   countryCode,
+  template,
 }) => {
   const { theme, loading } = useTheme()
+
+  // If template is provided and published, use template settings
+  const useTemplate = template && template.status === 'PUBLISHED'
+  const templateSettings = useTemplate ? (template.settings || {}) : {}
+  
+  // Determine layout from template or fallback to 'standard'
+  const layoutType = useTemplate 
+    ? (templateSettings.layout?.type || 'standard')
+    : 'standard'
+  
+  // Determine if related products should show
+  const showRelatedProducts = useTemplate
+    ? (templateSettings.relatedProducts?.enabled !== false)
+    : true
 
   // Show default layout while loading
   if (loading) {
@@ -59,11 +75,8 @@ const ThemedProductTemplate: React.FC<ThemedProductTemplateProps> = ({
     )
   }
 
-  const productPageConfig = theme.components.productPage
-  const layout = productPageConfig?.layout || 'standard'
-
   // Layout: Standard (side-by-side)
-  if (layout === 'standard') {
+  if (layoutType === 'standard') {
     return (
       <>
         <div
@@ -102,7 +115,7 @@ const ThemedProductTemplate: React.FC<ThemedProductTemplateProps> = ({
         </div>
 
         {/* Related Products */}
-        {productPageConfig?.relatedProducts?.enabled && (
+        {showRelatedProducts && (
           <div
             className="content-container my-16 small:my-32"
             data-testid="related-products-container"
@@ -120,7 +133,7 @@ const ThemedProductTemplate: React.FC<ThemedProductTemplateProps> = ({
   }
 
   // Layout: Centered (image top, info bottom)
-  if (layout === 'centered') {
+  if (layoutType === 'centered') {
     return (
       <>
         <div
@@ -155,7 +168,7 @@ const ThemedProductTemplate: React.FC<ThemedProductTemplateProps> = ({
         </div>
 
         {/* Related Products */}
-        {productPageConfig?.relatedProducts?.enabled && (
+        {showRelatedProducts && (
           <div
             className="content-container my-16 small:my-32"
             data-testid="related-products-container"
@@ -203,7 +216,7 @@ const ThemedProductTemplate: React.FC<ThemedProductTemplateProps> = ({
       </div>
 
       {/* Related Products */}
-      {productPageConfig?.relatedProducts?.enabled && (
+      {showRelatedProducts && (
         <div
           className="content-container my-16 small:my-32"
           data-testid="related-products-container"

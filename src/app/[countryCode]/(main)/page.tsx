@@ -1,8 +1,7 @@
 import { Metadata } from "next"
-import { listCollections } from "@lib/data/collections"
 import { getRegion } from "@lib/data/regions"
 import { getPageLayout } from "@lib/page-builder/api"
-import { DynamicSectionRenderer } from "@lib/page-builder/section-renderer"
+import { ServerPageRenderer } from "@lib/page-builder/page-renderer"
 
 export const metadata: Metadata = {
   title: "Medusa Next.js Starter Template",
@@ -17,15 +16,12 @@ export default async function Home(props: {
   const { countryCode } = params
 
   const region = await getRegion(countryCode)
-  const { collections } = await listCollections({
-    fields: "id, handle, title",
-  })
 
-  if (!collections || !region) {
+  if (!region) {
     return null
   }
 
-  // Get dynamic page layout (supports per-store customization)
+  // Get dynamic page layout from backend
   const pageLayout = await getPageLayout()
 
   if (!pageLayout) {
@@ -36,19 +32,6 @@ export default async function Home(props: {
     )
   }
 
-  // Sort sections by order
-  const sortedSections = [...pageLayout.sections].sort((a, b) => a.order - b.order)
-
-  return (
-    <>
-      {sortedSections.map((section) => (
-        <DynamicSectionRenderer
-          key={section.id}
-          section={section}
-          region={region}
-          collections={collections}
-        />
-      ))}
-    </>
-  )
+  // Render page using the dynamic page builder
+  return <ServerPageRenderer sections={pageLayout.sections} />
 }
