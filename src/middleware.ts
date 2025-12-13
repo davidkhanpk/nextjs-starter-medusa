@@ -9,7 +9,6 @@ const getBackendUrl = () => {
 // Function to get publishable key at runtime
 const getPublishableKey = () => {
   const key = process.env.MEDUSA_PUBLISHABLE_KEY || process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY
-  console.log("============= Medusa Publishable Key: ============== ", key)
   return key
 }
 

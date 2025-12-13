@@ -1,3 +1,14 @@
+/**
+ * Template System
+ * Handles both Product templates and Page templates (Cart, Checkout, etc.)
+ */
+
+// API clients
+export * from './api';
+export * from './types';
+export * from './tailwind-mapper';
+
+// Product template API (legacy)
 const API_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3000'
 
 export interface ProductTemplate {
@@ -37,3 +48,4 @@ export async function getDefaultProductTemplate(storeId: string): Promise<Produc
     return null
   }
 }
+

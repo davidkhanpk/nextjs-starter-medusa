@@ -6,6 +6,7 @@ import { listRegions } from "@lib/data/regions"
 import { StoreRegion } from "@medusajs/types"
 import CategoryTemplate from "@modules/categories/templates"
 import { SortOptions } from "@modules/store/components/refinement-list/sort-products"
+import { getDefaultCategoryTemplate } from "@lib/template"
 
 type Props = {
   params: Promise<{ category: string[]; countryCode: string }>
@@ -74,12 +75,17 @@ export default async function CategoryPage(props: Props) {
     notFound()
   }
 
+  // Fetch category template from Shopikool
+  const storeId = process.env.NEXT_PUBLIC_STORE_ID
+  const template = storeId ? await getDefaultCategoryTemplate(storeId) : null
+
   return (
     <CategoryTemplate
       category={productCategory}
       sortBy={sortBy}
       page={page}
       countryCode={params.countryCode}
+      template={template}
     />
   )
 }

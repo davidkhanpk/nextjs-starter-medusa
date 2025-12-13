@@ -10,6 +10,7 @@ import RelatedProducts from "@modules/products/components/related-products"
 import ProductInfo from "@modules/products/templates/product-info"
 import SkeletonRelatedProducts from "@modules/skeletons/templates/skeleton-related-products"
 import ProductActionsWrapper from "./product-actions-wrapper"
+import PixelTracker from "@modules/products/components/pixel-tracker"
 import { HttpTypes } from "@medusajs/types"
 
 type ThemedProductTemplateProps = {
@@ -45,6 +46,7 @@ const ThemedProductTemplate: React.FC<ThemedProductTemplateProps> = ({
   if (loading) {
     return (
       <>
+        <PixelTracker product={product} region={region} />
         <div
           className="content-container flex flex-col small:flex-row small:items-start py-6 relative"
           data-testid="product-container"
@@ -185,6 +187,7 @@ const ThemedProductTemplate: React.FC<ThemedProductTemplateProps> = ({
   // Default: Standard layout
   return (
     <>
+      <PixelTracker product={product} region={region} />
       <div
         className="content-container flex flex-col small:flex-row small:items-start py-6 relative"
         data-testid="product-container"

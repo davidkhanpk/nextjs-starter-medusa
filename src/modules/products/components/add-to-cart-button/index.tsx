@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useParams } from 'next/navigation'
 import { addToCart } from '@lib/data/cart'
 import { useTheme } from '@lib/theme/ThemeProvider'
+import { usePixelTracking } from '@lib/pixel/usePixelTracking'
 import { ShoppingCart } from '@medusajs/icons'
 
 interface AddToCartButtonProps {
@@ -12,6 +13,10 @@ interface AddToCartButtonProps {
   className?: string
   size?: 'sm' | 'md' | 'lg'
   children?: React.ReactNode
+  productId?: string
+  productName?: string
+  productPrice?: number
+  currency?: string
 }
 
 export default function AddToCartButton({
@@ -20,12 +25,17 @@ export default function AddToCartButton({
   className = '',
   size = 'md',
   children,
+  productId,
+  productName,
+  productPrice,
+  currency,
 }: AddToCartButtonProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [isAdded, setIsAdded] = useState(false)
   const params = useParams()
   const countryCode = (params?.countryCode as string) || 'us'
   const { theme } = useTheme()
+  const { trackAddToCart } = usePixelTracking()
 
   const sizeClasses = {
     sm: 'px-3 py-1.5 text-sm',
@@ -43,6 +53,16 @@ export default function AddToCartButton({
         quantity,
         countryCode,
       })
+      
+      // Track Facebook Pixel AddToCart event
+      if (productId && productName && productPrice) {
+        trackAddToCart({
+          value: productPrice / 100, // Convert from cents
+          currency: currency || 'USD',
+          contentId: productId,
+          contentName: productName,
+        })
+      }
       
       setIsAdded(true)
       

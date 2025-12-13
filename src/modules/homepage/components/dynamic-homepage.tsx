@@ -10,6 +10,8 @@ import { CategoriesGridSection } from './sections/categories-grid-section'
 import { BannerSection } from './sections/banner-section'
 import { NewsletterSection } from './sections/newsletter-section'
 import { CustomHtmlSection } from './sections/custom-html-section'
+import { CollectionsSection } from './sections/collections-section'
+import { TestimonialsSection } from './sections/testimonials-section'
 
 interface DynamicHomepageProps {
   storeId: string
@@ -157,6 +159,20 @@ function SectionRenderer({ section }: SectionRendererProps) {
       return (
         <div className={containerClass}>
           <CustomHtmlSection section={section} />
+        </div>
+      )
+
+    case 'collections':
+      return (
+        <div className={containerClass}>
+          <CollectionsSection section={section} />
+        </div>
+      )
+
+    case 'testimonials':
+      return (
+        <div className={containerClass}>
+          <TestimonialsSection section={section} />
         </div>
       )
 

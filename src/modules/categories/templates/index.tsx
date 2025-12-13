@@ -8,23 +8,41 @@ import { SortOptions } from "@modules/store/components/refinement-list/sort-prod
 import PaginatedProducts from "@modules/store/templates/paginated-products"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import { HttpTypes } from "@medusajs/types"
+import { ProductTemplate } from "@lib/template"
+import DynamicCategoryTemplate from "./dynamic-category-template"
 
 export default function CategoryTemplate({
   category,
   sortBy,
   page,
   countryCode,
+  template,
 }: {
   category: HttpTypes.StoreProductCategory
   sortBy?: SortOptions
   page?: string
   countryCode: string
+  template?: ProductTemplate | null
 }) {
   const pageNumber = page ? parseInt(page) : 1
   const sort = sortBy || "created_at"
 
   if (!category || !countryCode) notFound()
 
+  // Use dynamic template if available
+  if (template && template.zones) {
+    return (
+      <DynamicCategoryTemplate
+        category={category}
+        template={template}
+        sortBy={sort}
+        page={pageNumber}
+        countryCode={countryCode}
+      />
+    )
+  }
+
+  // Fallback to default layout
   const parents = [] as HttpTypes.StoreProductCategory[]
 
   const getParents = (category: HttpTypes.StoreProductCategory) => {

@@ -6,6 +6,7 @@ import { listRegions } from "@lib/data/regions"
 import { StoreCollection, StoreRegion } from "@medusajs/types"
 import CollectionTemplate from "@modules/collections/templates"
 import { SortOptions } from "@modules/store/components/refinement-list/sort-products"
+import { getDefaultCollectionTemplate } from "@lib/template"
 
 type Props = {
   params: Promise<{ handle: string; countryCode: string }>
@@ -79,6 +80,7 @@ export default async function CollectionPage(props: Props) {
     notFound()
   }
 
+  // No template fetching needed here - handled by TemplateBasedCollection
   return (
     <CollectionTemplate
       collection={collection}

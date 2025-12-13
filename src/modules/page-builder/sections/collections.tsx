@@ -30,8 +30,6 @@ export default async function CollectionsSection(props: CollectionsSectionProps)
   const { collections } = await sdk.store.collection.list({
     limit: 100,
     fields: 'id,title,handle,metadata',
-  }, {
-    next: { revalidate: 3600 }
   });
   
   // Filter by specified IDs if provided

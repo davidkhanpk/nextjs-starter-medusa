@@ -16,11 +16,11 @@ export interface TemplateSection {
 export interface ProductTemplate {
   id: string
   storeId: string
-  templateType: 'PRODUCT' | 'COLLECTION' | 'PAGE'
+  templateType: 'PRODUCT_PAGE' | 'COLLECTION_PAGE' | 'CATEGORY_PAGE' | 'CART_PAGE' | 'CHECKOUT_PAGE' | 'ACCOUNT_PAGE' | 'ORDER_CONFIRMATION_PAGE' | 'HEADER' | 'FOOTER' | 'SIDEBAR'
   templateName: string
   status: 'DRAFT' | 'PUBLISHED'
   isDefault: boolean
-  zones: Record<string, TemplateSection[]>
+  zones: Record<string, any>
   settings?: any
   createdAt: string
   updatedAt: string
@@ -32,7 +32,7 @@ export interface ProductTemplate {
 export async function getDefaultProductTemplate(storeId: string): Promise<ProductTemplate | null> {
   try {
     const response = await fetch(
-      `${SHOPIKOOL_BACKEND_URL}/api/stores/${storeId}/templates/active/PRODUCT`,
+      `${SHOPIKOOL_BACKEND_URL}/api/stores/${storeId}/templates/active/PRODUCT_PAGE`,
       {
         method: 'GET',
         headers: {
@@ -56,6 +56,108 @@ export async function getDefaultProductTemplate(storeId: string): Promise<Produc
     return template
   } catch (error) {
     console.error('Error fetching product template:', error)
+    return null
+  }
+}
+
+/**
+ * Fetch the default published category template for a store
+ */
+export async function getDefaultCategoryTemplate(storeId: string): Promise<ProductTemplate | null> {
+  try {
+    const response = await fetch(
+      `${SHOPIKOOL_BACKEND_URL}/api/stores/${storeId}/templates/active/CATEGORY_PAGE`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        next: {
+          revalidate: 300, // Cache for 5 minutes
+        },
+      }
+    )
+
+    if (!response.ok) {
+      if (response.status === 404) {
+        console.warn(`No active category template found for store ${storeId}`)
+        return null
+      }
+      throw new Error(`Failed to fetch template: ${response.statusText}`)
+    }
+
+    const template = await response.json()
+    return template
+  } catch (error) {
+    console.error('Error fetching category template:', error)
+    return null
+  }
+}
+
+/**
+ * Fetch the default published collection template for a store
+ */
+export async function getDefaultCollectionTemplate(storeId: string): Promise<ProductTemplate | null> {
+  try {
+    const response = await fetch(
+      `${SHOPIKOOL_BACKEND_URL}/api/stores/${storeId}/templates/active/COLLECTION_PAGE`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        next: {
+          revalidate: 300, // Cache for 5 minutes
+        },
+      }
+    )
+
+    if (!response.ok) {
+      if (response.status === 404) {
+        console.warn(`No active collection template found for store ${storeId}`)
+        return null
+      }
+      throw new Error(`Failed to fetch template: ${response.statusText}`)
+    }
+
+    const template = await response.json()
+    return template
+  } catch (error) {
+    console.error('Error fetching collection template:', error)
+    return null
+  }
+}
+
+/**
+ * Fetch the default published checkout template for a store
+ */
+export async function getDefaultCheckoutTemplate(storeId: string): Promise<ProductTemplate | null> {
+  try {
+    const response = await fetch(
+      `${SHOPIKOOL_BACKEND_URL}/api/stores/${storeId}/templates/active/CHECKOUT_PAGE`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        next: {
+          revalidate: 300, // Cache for 5 minutes
+        },
+      }
+    )
+
+    if (!response.ok) {
+      if (response.status === 404) {
+        console.warn(`No active checkout template found for store ${storeId}`)
+        return null
+      }
+      throw new Error(`Failed to fetch template: ${response.statusText}`)
+    }
+
+    const template = await response.json()
+    return template
+  } catch (error) {
+    console.error('Error fetching checkout template:', error)
     return null
   }
 }
@@ -93,14 +195,22 @@ export async function getTemplateById(storeId: string, templateId: string): Prom
 /**
  * Get sections for a specific zone
  */
-export function getZoneSections(template: ProductTemplate | null, zoneName: string): TemplateSection[] {
+export function getZoneSections(template: ProductTemplate | null, zoneName: string): any[] {
   if (!template || !template.zones || !template.zones[zoneName]) {
     return []
   }
 
-  return template.zones[zoneName]
-    .filter(section => section.enabled !== false)
-    .sort((a, b) => a.order - b.order)
+  const zoneData = template.zones[zoneName]
+  
+  // If it's an array of sections, filter and sort
+  if (Array.isArray(zoneData)) {
+    return zoneData
+      .filter((section: any) => section.enabled !== false)
+      .sort((a: any, b: any) => (a.order || 0) - (b.order || 0))
+  }
+  
+  // If it's an object, return it as is
+  return [zoneData]
 }
 
 /**
