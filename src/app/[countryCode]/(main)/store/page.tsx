@@ -2,6 +2,10 @@ import { Metadata } from "next"
 
 import { SortOptions } from "@modules/store/components/refinement-list/sort-products"
 import StoreTemplate from "@modules/store/templates"
+import { fetchTemplate } from "@lib/template/api"
+
+// Force dynamic rendering — this page uses searchParams and cookies()
+export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: "Store",
@@ -23,11 +27,15 @@ export default async function StorePage(props: Params) {
   const searchParams = await props.searchParams;
   const { sortBy, page } = searchParams
 
+  // Fetch PRODUCT_CARD template from Shopikool backend
+  const productCardTemplate = await fetchTemplate('PRODUCT_CARD').catch(() => null)
+
   return (
     <StoreTemplate
       sortBy={sortBy}
       page={page}
       countryCode={params.countryCode}
+      productCardTemplate={productCardTemplate}
     />
   )
 }

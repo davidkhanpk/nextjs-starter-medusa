@@ -8,9 +8,6 @@ export * from './api';
 export * from './types';
 export * from './tailwind-mapper';
 
-// Product template API (legacy)
-const API_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3000'
-
 export interface ProductTemplate {
   id: string
   templateType: string
@@ -22,6 +19,8 @@ export interface ProductTemplate {
 }
 
 export async function getDefaultProductTemplate(storeId: string): Promise<ProductTemplate | null> {
+  const API_URL = process.env.SHOPIKOOL_API_URL || 'http://localhost:3000/api'
+  
   try {
     const response = await fetch(
       `${API_URL}/stores/${storeId}/templates/default/PRODUCT_PAGE`,

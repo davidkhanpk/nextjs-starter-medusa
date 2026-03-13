@@ -64,7 +64,7 @@ function deepMerge<T extends Record<string, any>>(target: T, source: Partial<T>)
  * Map Platform Theme to Storefront Theme
  */
 export function mapPlatformThemeToStorefront(platformTheme: PlatformTheme): StoreTheme {
-  const { globalSettings, components } = platformTheme;
+  const { globalSettings } = platformTheme;
 
   // Start with default theme and deep merge platform settings
   const storefrontTheme: StoreTheme = {
@@ -72,16 +72,12 @@ export function mapPlatformThemeToStorefront(platformTheme: PlatformTheme): Stor
     colors: deepMerge(defaultTheme.colors, globalSettings?.colors || {}),
     typography: deepMerge(defaultTheme.typography, globalSettings?.typography || {}),
     layout: deepMerge(defaultTheme.layout, globalSettings?.layout || {}),
-    components: {
-      navbar: deepMerge(defaultTheme.components.navbar, components?.navbar || {}),
-      footer: deepMerge(defaultTheme.components.footer, components?.footer || {}),
-      productCard: deepMerge(defaultTheme.components.productCard, components?.productCard || {}),
-      button: deepMerge(defaultTheme.components.button, components?.button || {}),
-    },
-    homepage: deepMerge(defaultTheme.homepage, components?.homepage || {}),
-    productPage: deepMerge(defaultTheme.productPage, components?.productPage || {}),
-    cart: deepMerge(defaultTheme.cart, components?.cart || {}),
-    checkout: deepMerge(defaultTheme.checkout, components?.checkout || {}),
+    // Use default components - no longer stored in database
+    components: defaultTheme.components,
+    homepage: defaultTheme.homepage,
+    productPage: defaultTheme.productPage,
+    cart: defaultTheme.cart,
+    checkout: defaultTheme.checkout,
     advanced: {
       customCSS: platformTheme.customCSS || undefined,
     },

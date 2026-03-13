@@ -7,6 +7,37 @@ import { SortOptions } from "@modules/store/components/refinement-list/sort-prod
 import { getAuthHeaders, getCacheOptions } from "./cookies"
 import { getRegion, retrieveRegion } from "./regions"
 
+export const retrieveProduct = async (
+  productId: string
+): Promise<HttpTypes.StoreProduct | null> => {
+  const headers = {
+    ...(await getAuthHeaders()),
+  }
+
+  const next = {
+    ...(await getCacheOptions("products")),
+  }
+
+  try {
+    const { product } = await sdk.client.fetch<{ product: HttpTypes.StoreProduct }>(
+      `/store/products/${productId}`,
+      {
+        method: "GET",
+        query: {
+          fields: "*variants.calculated_price,+variants.inventory_quantity,*variants.images,+metadata,+tags",
+        },
+        headers,
+        next,
+        cache: "force-cache",
+      }
+    )
+    return product
+  } catch (error) {
+    console.error("Error fetching product:", error)
+    return null
+  }
+}
+
 export const listProducts = async ({
   pageParam = 1,
   queryParams,
@@ -132,5 +163,41 @@ export const listProductsWithSort = async ({
     },
     nextPage,
     queryParams,
+  }
+}
+
+/**
+ * Get products by collection ID
+ */
+export const getProductsByCollectionId = async ({
+  collectionId,
+  countryCode,
+  page = 1,
+  sortBy = "created_at",
+  limit = 12,
+}: {
+  collectionId: string
+  countryCode: string
+  page?: number
+  sortBy?: SortOptions
+  limit?: number
+}): Promise<HttpTypes.StoreProduct[]> => {
+  try {
+    const {
+      response: { products },
+    } = await listProductsWithSort({
+      page,
+      queryParams: {
+        collection_id: [collectionId],
+        limit,
+      },
+      sortBy,
+      countryCode,
+    })
+
+    return products
+  } catch (error) {
+    console.error("Error fetching products by collection:", error)
+    return []
   }
 }

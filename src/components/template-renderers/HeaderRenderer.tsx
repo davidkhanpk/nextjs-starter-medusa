@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { HeaderTemplate } from '@lib/template/types-advanced';
-import Link from 'next/link';
+import Link from '@/components/common/SafeLink';
 import { 
   cn, 
   colorToTailwind, 

@@ -1,12 +1,12 @@
 import { Metadata } from "next"
 import { notFound } from "next/navigation"
-
 import { getCollectionByHandle, listCollections } from "@lib/data/collections"
 import { listRegions } from "@lib/data/regions"
+import { fetchTemplate } from "@lib/template/api"
 import { StoreCollection, StoreRegion } from "@medusajs/types"
 import CollectionTemplate from "@modules/collections/templates"
+import PuckRenderer from "@/components/puck/PuckRenderer"
 import { SortOptions } from "@modules/store/components/refinement-list/sort-products"
-import { getDefaultCollectionTemplate } from "@lib/template"
 
 type Props = {
   params: Promise<{ handle: string; countryCode: string }>
@@ -19,36 +19,9 @@ type Props = {
 export const PRODUCT_LIMIT = 12
 
 export async function generateStaticParams() {
-  const { collections } = await listCollections({
-    fields: "*products",
-  })
-
-  if (!collections) {
-    return []
-  }
-
-  const countryCodes = await listRegions().then(
-    (regions: StoreRegion[]) =>
-      regions
-        ?.map((r) => r.countries?.map((c) => c.iso_2))
-        .flat()
-        .filter(Boolean) as string[]
-  )
-
-  const collectionHandles = collections.map(
-    (collection: StoreCollection) => collection.handle
-  )
-
-  const staticParams = countryCodes
-    ?.map((countryCode: string) =>
-      collectionHandles.map((handle: string | undefined) => ({
-        countryCode,
-        handle,
-      }))
-    )
-    .flat()
-
-  return staticParams
+  // Return empty — pages render on-demand via SSR.
+  // Multi-tenant image has no Medusa backend at Docker build time.
+  return []
 }
 
 export async function generateMetadata(props: Props): Promise<Metadata> {
@@ -80,7 +53,45 @@ export default async function CollectionPage(props: Props) {
     notFound()
   }
 
-  // No template fetching needed here - handled by TemplateBasedCollection
+  // Fetch COLLECTION_PAGE template from Shopikool backend
+  console.log('[Collection Page] Fetching COLLECTION_PAGE template...')
+  const collectionTemplate = await fetchTemplate('COLLECTION_PAGE').catch((error) => {
+    console.error('[Collection Page] Failed to fetch COLLECTION_PAGE template:', error)
+    return null
+  })
+
+  console.log('[Collection Page] Collection template fetched:', collectionTemplate ? 'SUCCESS' : 'FAILED')
+  
+  if (collectionTemplate) {
+    console.log('[Collection Page] Template ID:', collectionTemplate.id)
+    console.log('[Collection Page] Template Name:', collectionTemplate.templateName)
+    console.log('[Collection Page] Has puckData:', !!collectionTemplate.puckData)
+  }
+
+  // Use Puck template if available
+  if (collectionTemplate && collectionTemplate.puckData) {
+    console.log('[Collection Page] Rendering with Puck template')
+    console.log('[Collection Page] Template data:', JSON.stringify(collectionTemplate.puckData, null, 2))
+    
+    return (
+      <PuckRenderer 
+        data={{
+          ...collectionTemplate.puckData,
+          context: {
+            ...(collectionTemplate.puckData.context || {}),
+            collection,
+            countryCode: params.countryCode,
+            sortBy: sortBy || 'created_at',
+            page: page ? parseInt(page) : 1,
+          }
+        }}
+      />
+    )
+  }
+
+  console.log('[Collection Page] Falling back to original template')
+
+  // Fallback to original template
   return (
     <CollectionTemplate
       collection={collection}

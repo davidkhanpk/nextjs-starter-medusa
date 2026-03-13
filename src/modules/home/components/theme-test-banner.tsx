@@ -119,7 +119,7 @@ export default function ThemeTestBanner() {
             ✅ <strong>Theme is loaded from Shopikool Platform!</strong> Changes made in the dashboard will reflect here after page reload.
           </p>
           <p className="text-xs mt-2 opacity-75">
-            Store: {theme.branding.storeName} | Container Width: {theme.layout.containerWidth} | Navbar Height: {theme.components.navbar.height}
+            Store: {theme.branding.storeName} | Container Width: {theme.layout.containerWidth} | Border Radius: {theme.layout.borderRadius.md}
           </p>
         </div>
 

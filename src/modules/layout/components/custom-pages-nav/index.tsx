@@ -1,4 +1,4 @@
-import Link from "next/link"
+import Link from "@/components/common/SafeLink"
 
 interface Page {
   id: string
@@ -9,8 +9,8 @@ interface Page {
 }
 
 async function getPublishedPages() {
-  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL?.replace('/api', '') || 'http://localhost:3001'
-  const storeId = process.env.NEXT_PUBLIC_STORE_ID
+  const backendUrl = process.env.SHOPIKOOL_API_URL?.replace('/api', '') || 'http://localhost:3000'
+  const storeId = process.env.STORE_ID
 
   if (!storeId) {
     return []

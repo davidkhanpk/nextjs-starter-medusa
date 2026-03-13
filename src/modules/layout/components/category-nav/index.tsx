@@ -17,17 +17,16 @@ export default function CategoryNav() {
   useEffect(() => {
     async function fetchCategories() {
       try {
-        // Use the Medusa backend URL directly
-        const backendUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL || 'http://localhost:9000'
-        const response = await fetch(`${backendUrl}/store/product-categories?limit=100&fields=id,name,handle,parent_category_id,metadata`)
+        // Fetch via storefront API route (server-side proxy to Medusa)
+        const countryCode = window.location.pathname.split('/')[1] || 'us';
+        const res = await fetch(`/${countryCode}/api/categories`);
+        const data = await res.json();
+        const product_categories = data.product_categories || [];
         
-        if (response.ok) {
-          const data = await response.json()
-          const parentCategories = (data.product_categories || []).filter(
-            (cat: any) => !cat.parent_category_id
-          )
-          setCategories(parentCategories)
-        }
+        const parentCategories = (product_categories).filter(
+          (cat: any) => !cat.parent_category_id
+        )
+        setCategories(parentCategories)
       } catch (error) {
         console.error('Failed to fetch categories:', error)
       } finally {

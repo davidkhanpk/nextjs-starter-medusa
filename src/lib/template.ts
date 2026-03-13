@@ -3,8 +3,6 @@
  * Fetches template configurations from Shopikool backend
  */
 
-const SHOPIKOOL_BACKEND_URL = process.env.SHOPIKOOL_API_URL || process.env.NEXT_PUBLIC_SHOPIKOOL_BACKEND_URL || 'http://localhost:3000'
-
 export interface TemplateSection {
   id: string
   type: string
@@ -31,8 +29,9 @@ export interface ProductTemplate {
  */
 export async function getDefaultProductTemplate(storeId: string): Promise<ProductTemplate | null> {
   try {
+    const backendUrl = process.env.SHOPIKOOL_API_URL || 'http://localhost:3000'
     const response = await fetch(
-      `${SHOPIKOOL_BACKEND_URL}/api/stores/${storeId}/templates/active/PRODUCT_PAGE`,
+      `${backendUrl}/api/stores/${storeId}/templates/active/PRODUCT_PAGE`,
       {
         method: 'GET',
         headers: {
@@ -65,8 +64,9 @@ export async function getDefaultProductTemplate(storeId: string): Promise<Produc
  */
 export async function getDefaultCategoryTemplate(storeId: string): Promise<ProductTemplate | null> {
   try {
+    const backendUrl = process.env.SHOPIKOOL_API_URL || 'http://localhost:3000'
     const response = await fetch(
-      `${SHOPIKOOL_BACKEND_URL}/api/stores/${storeId}/templates/active/CATEGORY_PAGE`,
+      `${backendUrl}/api/stores/${storeId}/templates/active/CATEGORY_PAGE`,
       {
         method: 'GET',
         headers: {
@@ -99,8 +99,9 @@ export async function getDefaultCategoryTemplate(storeId: string): Promise<Produ
  */
 export async function getDefaultCollectionTemplate(storeId: string): Promise<ProductTemplate | null> {
   try {
+    const backendUrl = process.env.SHOPIKOOL_API_URL || 'http://localhost:3000'
     const response = await fetch(
-      `${SHOPIKOOL_BACKEND_URL}/api/stores/${storeId}/templates/active/COLLECTION_PAGE`,
+      `${backendUrl}/api/stores/${storeId}/templates/active/COLLECTION_PAGE`,
       {
         method: 'GET',
         headers: {
@@ -133,8 +134,9 @@ export async function getDefaultCollectionTemplate(storeId: string): Promise<Pro
  */
 export async function getDefaultCheckoutTemplate(storeId: string): Promise<ProductTemplate | null> {
   try {
+    const backendUrl = process.env.SHOPIKOOL_API_URL || 'http://localhost:3000'
     const response = await fetch(
-      `${SHOPIKOOL_BACKEND_URL}/api/stores/${storeId}/templates/active/CHECKOUT_PAGE`,
+      `${backendUrl}/api/stores/${storeId}/templates/active/CHECKOUT_PAGE`,
       {
         method: 'GET',
         headers: {
@@ -167,8 +169,9 @@ export async function getDefaultCheckoutTemplate(storeId: string): Promise<Produ
  */
 export async function getTemplateById(storeId: string, templateId: string): Promise<ProductTemplate | null> {
   try {
+    const backendUrl = process.env.SHOPIKOOL_API_URL || 'http://localhost:3000'
     const response = await fetch(
-      `${SHOPIKOOL_BACKEND_URL}/api/stores/${storeId}/templates/${templateId}`,
+      `${backendUrl}/api/stores/${storeId}/templates/${templateId}`,
       {
         method: 'GET',
         headers: {
@@ -219,3 +222,106 @@ export function getZoneSections(template: ProductTemplate | null, zoneName: stri
 export function hasZoneSections(template: ProductTemplate | null, zoneName: string): boolean {
   return getZoneSections(template, zoneName).length > 0
 }
+
+/**
+ * Fetch the default product card template for a store
+ */
+export async function getDefaultProductCardTemplate(storeId: string): Promise<any | null> {
+  try {
+    const backendUrl = process.env.SHOPIKOOL_API_URL || 'http://localhost:3000'
+    const response = await fetch(
+      `${backendUrl}/api/stores/${storeId}/templates/product-card/default`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        next: {
+          revalidate: 3600, // Cache for 1 hour
+        },
+      }
+    )
+
+    if (!response.ok) {
+      if (response.status === 404) {
+        console.warn(`No default product card template found for store ${storeId}`)
+        return null
+      }
+      throw new Error(`Failed to fetch product card template: ${response.statusText}`)
+    }
+
+    const data = await response.json()
+    return data.template || null
+  } catch (error) {
+    console.error('Error fetching product card template:', error)
+    return null
+  }
+}
+
+/**
+ * Fetch a specific product card template by ID
+ */
+export async function getProductCardTemplateById(
+  storeId: string,
+  templateId: string
+): Promise<any | null> {
+  try {
+    const backendUrl = process.env.SHOPIKOOL_API_URL || 'http://localhost:3000'
+    const response = await fetch(
+      `${backendUrl}/api/stores/${storeId}/templates/${templateId}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        next: {
+          revalidate: 3600,
+        },
+      }
+    )
+
+    if (!response.ok) {
+      console.warn(`Failed to fetch product card template ${templateId}`)
+      return null
+    }
+
+    const data = await response.json()
+    return data.template || null
+  } catch (error) {
+    console.error('Error fetching product card template by ID:', error)
+    return null
+  }
+}
+
+/**
+ * Fetch all product card templates for a store
+ */
+export async function getProductCardTemplates(storeId: string): Promise<any[]> {
+  try {
+    const backendUrl = process.env.SHOPIKOOL_API_URL || 'http://localhost:3000'
+    const response = await fetch(
+      `${backendUrl}/api/stores/${storeId}/templates/product-card`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        next: {
+          revalidate: 3600,
+        },
+      }
+    )
+
+    if (!response.ok) {
+      console.warn(`Failed to fetch product card templates for store ${storeId}`)
+      return []
+    }
+
+    const data = await response.json()
+    return data.templates || []
+  } catch (error) {
+    console.error('Error fetching product card templates:', error)
+    return []
+  }
+}
+

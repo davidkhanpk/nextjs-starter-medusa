@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import Link from 'next/link'
+import Link from '@/components/common/SafeLink'
 import Image from 'next/image'
 import { CategoriesSection as CategoriesSectionType } from '@lib/page-builder/types'
 import { Swiper, SwiperSlide } from 'swiper/react'

@@ -1,12 +1,19 @@
 import { Metadata } from "next"
 import { getRegion } from "@lib/data/regions"
-import { getPageLayout } from "@lib/page-builder/api"
-import { ServerPageRenderer } from "@lib/page-builder/page-renderer"
+import { getDefaultHomepage } from "@lib/page-builder/api"
+import PuckRenderer from "@/components/puck/PuckRenderer"
 
-export const metadata: Metadata = {
-  title: "Medusa Next.js Starter Template",
-  description:
-    "A performant frontend ecommerce starter template with Next.js 15 and Medusa.",
+export async function generateMetadata(props: {
+  params: Promise<{ countryCode: string }>
+}): Promise<Metadata> {
+  const homepage = await getDefaultHomepage()
+
+  return {
+    title: homepage?.metaTitle || "Medusa Next.js Starter Template",
+    description:
+      homepage?.metaDescription ||
+      "A performant frontend ecommerce starter template with Next.js 15 and Medusa.",
+  }
 }
 
 export default async function Home(props: {
@@ -21,17 +28,24 @@ export default async function Home(props: {
     return null
   }
 
-  // Get dynamic page layout from backend
-  const pageLayout = await getPageLayout()
+  // Fetch homepage data from PageBuilder
+  const homepage = await getDefaultHomepage()
 
-  if (!pageLayout) {
+  if (!homepage || !homepage.puckData) {
     return (
       <div className="text-center py-20">
-        <p className="text-gray-500">Unable to load page layout</p>
+        <h1 className="text-2xl font-bold mb-4">Welcome to Our Store</h1>
+        <p className="text-gray-500">
+          Homepage not configured yet. Please set up your homepage in the
+          dashboard.
+        </p>
       </div>
     )
   }
 
-  // Render page using the dynamic page builder
-  return <ServerPageRenderer sections={pageLayout.sections} />
+  console.log("Homepage Puck Data:", homepage.puckData)
+
+  // Render using Puck
+  return <PuckRenderer data={homepage.puckData} />
 }
+

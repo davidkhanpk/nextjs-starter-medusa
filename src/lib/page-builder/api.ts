@@ -1,109 +1,139 @@
+/**
+ * Shopikool Page Builder API
+ * Fetches pages created with the Puck visual editor
+ */
+
 import { PageLayout } from './types'
 
+export interface PageData {
+  id: string
+  pageType: string
+  pageName: string
+  slug: string
+  status: string
+  puckData: any
+  metaTitle?: string
+  metaDescription?: string
+  createdAt: string
+  updatedAt: string
+}
+
 /**
- * Get page layout for a store
+ * Fetch the default homepage
  */
-export async function getPageLayout(storeId?: string): Promise<PageLayout | null> {
+export async function getDefaultHomepage(): Promise<PageData | null> {
+  const BACKEND_URL = process.env.SHOPIKOOL_API_URL || 'http://localhost:3000/api'
+  const STORE_ID = process.env.STORE_ID
+ 
+  if (!STORE_ID) {
+    console.error('STORE_ID environment variable is not set')
+    return null
+  }
+
   try {
-    // Get store ID from environment variable
-    const actualStoreId = storeId || process.env.NEXT_PUBLIC_STORE_ID || 'default'
-    
-    // Fetch from Shopikool Backend API
-    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3001'
-    
     const response = await fetch(
-      `${backendUrl}/stores/${actualStoreId}/pages/default/HOME`,
+      `${BACKEND_URL}/stores/${STORE_ID}/pages/default/HOMEPAGE`,
       {
         next: {
-          tags: ['page-layout'],
+          tags: ['homepage'],
           revalidate: 300, // Cache for 5 minutes
         },
       }
     )
 
-    if (response.ok) {
-      const data = await response.json()
-      return {
-        id: data.id || actualStoreId,
-        name: data.pageName || 'Homepage',
-        sections: data.sections || [],
-        createdAt: data.createdAt || new Date().toISOString(),
-        updatedAt: data.updatedAt || new Date().toISOString(),
-      }
+    if (!response.ok) {
+      console.error('Failed to fetch homepage:', response.statusText)
+      return null
     }
 
-    // Fallback to default layout
-    console.log('No homepage found in backend, using default layout')
-    return getDefaultLayout()
+    return await response.json()
   } catch (error) {
-    console.error('Error fetching page layout:', error)
-    return getDefaultLayout()
+    console.error('Error fetching homepage:', error)
+    return null
   }
 }
 
 /**
- * Get default homepage layout
+ * Fetch a page by slug (for custom pages)
+ */
+export async function getPageBySlug(slug: string): Promise<PageData | null> {
+  const BACKEND_URL = process.env.SHOPIKOOL_API_URL || 'http://localhost:3000/api'
+  const STORE_ID = process.env.STORE_ID
+
+  if (!STORE_ID) {
+    console.error('STORE_ID environment variable is not set')
+    return null
+  }
+
+  try {
+    const response = await fetch(
+      `${BACKEND_URL}/stores/${STORE_ID}/pages/slug/${slug}`,
+      {
+        next: {
+          tags: ['page', `page-${slug}`],
+          revalidate: 300, // Cache for 5 minutes
+        },
+      }
+    )
+
+    if (!response.ok) {
+      console.error(`Failed to fetch page ${slug}:`, response.statusText)
+      return null
+    }
+
+    return await response.json()
+  } catch (error) {
+    console.error(`Error fetching page ${slug}:`, error)
+    return null
+  }
+}
+
+/**
+ * Get all published pages (for navigation/sitemap)
+ */
+export async function getAllPublishedPages(): Promise<PageData[]> {
+  const BACKEND_URL = process.env.SHOPIKOOL_API_URL || 'http://localhost:3000/api'
+  const STORE_ID = process.env.STORE_ID
+
+  if (!STORE_ID) {
+    console.error('STORE_ID environment variable is not set')
+    return []
+  }
+
+  try {
+    const response = await fetch(
+      `${BACKEND_URL}/stores/${STORE_ID}/pages?status=PUBLISHED`,
+      {
+        next: {
+          tags: ['pages'],
+          revalidate: 600, // Cache for 10 minutes
+        },
+      }
+    )
+
+    if (!response.ok) {
+      console.error('Failed to fetch pages:', response.statusText)
+      return []
+    }
+
+    return await response.json()
+  } catch (error) {
+    console.error('Error fetching pages:', error)
+    return []
+  }
+}
+
+/**
+ * Get default page layout
+ * Returns a default layout structure for new stores
  */
 export function getDefaultLayout(): PageLayout {
   return {
     id: 'default',
-    name: 'Default Homepage Layout',
-    sections: [
-      {
-        id: 'hero_1',
-        type: 'hero',
-        enabled: true,
-        order: 0,
-        title: 'Welcome to Our Store',
-        subtitle: 'Discover amazing products',
-        variant: 'gradient',
-        height: 'md',
-        ctaText: 'Shop Now',
-        ctaLink: '/store',
-        textAlign: 'center',
-        showScrollIndicator: true,
-      },
-      {
-        id: 'categories_1',
-        type: 'categories-grid',
-        enabled: true,
-        order: 1,
-        title: 'Shop by Category',
-        subtitle: 'Browse our product categories',
-        layout: 'grid',
-        columns: 4,
-        showProductCount: true,
-        showImages: true,
-        imageShape: 'rounded',
-      },
-    ],
+    name: 'Default Layout',
+    sections: [],
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   }
 }
 
-/**
- * Save page layout
- */
-export async function savePageLayout(
-  storeId: string,
-  layout: PageLayout
-): Promise<boolean> {
-  try {
-    const response = await fetch('/api/page-builder/layouts', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        storeId,
-        layout,
-      }),
-    })
-
-    return response.ok
-  } catch (error) {
-    console.error('Error saving page layout:', error)
-    return false
-  }
-}

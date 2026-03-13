@@ -11,8 +11,55 @@ import {
   colorToTailwind,
   borderRadiusToTailwind
 } from '@lib/template/tailwind-mapper';
-import Link from 'next/link';
+import { convertToLocale } from '@lib/util/money';
+import Link from '@/components/common/SafeLink';
 import { CheckCircle2, Package, Truck, MapPin, CreditCard, Printer, Home, User } from 'lucide-react';
+
+/**
+ * Default order confirmation template
+ */
+function getDefaultOrderConfirmationTemplate(): OrderConfirmationTemplate {
+  return {
+    id: 'default',
+    templateName: 'Default Order Confirmation',
+    zones: {
+      header: {
+        showSuccessIcon: true,
+        successMessage: 'Thank you for your order!',
+        showOrderNumber: true,
+        showEstimatedDelivery: true,
+      },
+      orderDetails: {
+        showProductImages: true,
+        showProductQuantity: true,
+        showProductPrice: true,
+        showShippingAddress: true,
+        showBillingAddress: true,
+        showPaymentMethod: false,
+      },
+      nextSteps: {
+        showTrackingLink: false,
+        showPrintButton: true,
+        showContinueShoppingButton: true,
+        showAccountLink: true,
+      },
+    },
+    settings: {
+      colors: {
+        primary: '#3b82f6',
+        secondary: '#6b7280',
+        accent: '#10b981',
+        success: '#10b981',
+      },
+      spacing: 'normal',
+      borderRadius: 'medium',
+      animations: {
+        showConfetti: true,
+        showCheckAnimation: true,
+      },
+    },
+  };
+}
 
 interface OrderConfirmationRendererProps {
   template: OrderConfirmationTemplate | null;
@@ -24,7 +71,49 @@ interface OrderConfirmationRendererProps {
  * Renders order success page with optional confetti and animations
  */
 export function OrderConfirmationRenderer({ template, order }: OrderConfirmationRendererProps) {
-  const config = template || getDefaultOrderConfirmationTemplate();
+  // Log order details for debugging
+  console.log('[OrderConfirmationRenderer] Full order object:', order);
+  console.log('[OrderConfirmationRenderer] Order items:', order.items);
+  console.log('[OrderConfirmationRenderer] Price details:', {
+    currency_code: order.currency_code,
+    item_subtotal: order.item_subtotal,
+    subtotal: order.subtotal,
+    shipping_total: order.shipping_total,
+    tax_total: order.tax_total,
+    total: order.total,
+  });
+  console.log('[OrderConfirmationRenderer] Note: item_subtotal is items only, subtotal includes shipping');
+  
+  // Log each item's pricing
+  order.items?.forEach((item: any, index: number) => {
+    console.log(`[OrderConfirmationRenderer] Item ${index}:`, {
+      title: item.title,
+      quantity: item.quantity,
+      unit_price: item.unit_price,
+      total: item.total,
+      variant_title: item.variant?.title,
+    });
+  });
+
+  // Always use default template and merge with provided template if available
+  const defaultTemplate = getDefaultOrderConfirmationTemplate();
+  const config = template ? {
+    ...defaultTemplate,
+    zones: { ...defaultTemplate.zones, ...(template.zones || {}) },
+    settings: {
+      ...defaultTemplate.settings,
+      ...(template.settings || {}),
+      colors: {
+        ...defaultTemplate.settings.colors,
+        ...(template.settings?.colors || {})
+      },
+      animations: {
+        ...defaultTemplate.settings.animations,
+        ...(template.settings?.animations || {})
+      }
+    }
+  } : defaultTemplate;
+  
   const { zones, settings } = config;
 
   const [showConfetti, setShowConfetti] = useState(false);
@@ -153,7 +242,10 @@ export function OrderConfirmationRenderer({ template, order }: OrderConfirmation
                 )}
                 {zones.orderDetails.showProductPrice && (
                   <div className="font-medium text-gray-900 dark:text-white">
-                    ${((item.unit_price || 0) / 100).toFixed(2)}
+                    {convertToLocale({
+                      amount: item.unit_price || 0,
+                      currency_code: order.currency_code,
+                    })}
                   </div>
                 )}
               </div>
@@ -169,19 +261,28 @@ export function OrderConfirmationRenderer({ template, order }: OrderConfirmation
           <div className="flex justify-between text-sm">
             <span className="text-gray-600 dark:text-gray-400">Subtotal</span>
             <span className="text-gray-900 dark:text-white">
-              ${((order.subtotal || 0) / 100).toFixed(2)}
+              {convertToLocale({
+                amount: order.item_subtotal || 0,
+                currency_code: order.currency_code,
+              })}
             </span>
           </div>
           <div className="flex justify-between text-sm">
             <span className="text-gray-600 dark:text-gray-400">Shipping</span>
             <span className="text-gray-900 dark:text-white">
-              ${((order.shipping_total || 0) / 100).toFixed(2)}
+              {convertToLocale({
+                amount: order.shipping_total || 0,
+                currency_code: order.currency_code,
+              })}
             </span>
           </div>
           <div className="flex justify-between text-sm">
             <span className="text-gray-600 dark:text-gray-400">Tax</span>
             <span className="text-gray-900 dark:text-white">
-              ${((order.tax_total || 0) / 100).toFixed(2)}
+              {convertToLocale({
+                amount: order.tax_total || 0,
+                currency_code: order.currency_code,
+              })}
             </span>
           </div>
           <div className={cn(
@@ -190,7 +291,10 @@ export function OrderConfirmationRenderer({ template, order }: OrderConfirmation
           )}>
             <span className="text-gray-900 dark:text-white">Total</span>
             <span className={colorToTailwind(settings.colors.primary, 'text')}>
-              ${((order.total || 0) / 100).toFixed(2)}
+              {convertToLocale({
+                amount: order.total || 0,
+                currency_code: order.currency_code,
+              })}
             </span>
           </div>
         </div>
@@ -365,50 +469,4 @@ export function OrderConfirmationRenderer({ template, order }: OrderConfirmation
       `}</style>
     </>
   );
-}
-
-/**
- * Default order confirmation template
- */
-function getDefaultOrderConfirmationTemplate(): OrderConfirmationTemplate {
-  return {
-    id: 'default',
-    templateName: 'Default Order Confirmation',
-    zones: {
-      header: {
-        showSuccessIcon: true,
-        successMessage: 'Thank you for your order!',
-        showOrderNumber: true,
-        showEstimatedDelivery: true,
-      },
-      orderDetails: {
-        showProductImages: true,
-        showProductQuantity: true,
-        showProductPrice: true,
-        showShippingAddress: true,
-        showBillingAddress: true,
-        showPaymentMethod: false,
-      },
-      nextSteps: {
-        showTrackingLink: false,
-        showPrintButton: true,
-        showContinueShoppingButton: true,
-        showAccountLink: true,
-      },
-    },
-    settings: {
-      colors: {
-        primary: '#3b82f6',
-        secondary: '#6b7280',
-        accent: '#10b981',
-        success: '#10b981',
-      },
-      spacing: 'normal',
-      borderRadius: 'medium',
-      animations: {
-        showConfetti: true,
-        showCheckAnimation: true,
-      },
-    },
-  };
 }

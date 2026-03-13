@@ -3,6 +3,8 @@ import { fetchTemplate } from '@lib/template/api';
 import { CheckoutTemplate as CheckoutTemplateType } from '@lib/template/types';
 import { CheckoutPageRenderer } from '@/components/template-renderers/CheckoutPageRenderer';
 import { HttpTypes } from "@medusajs/types"
+import { listCartShippingMethods } from "@lib/data/fulfillment"
+import { listCartPaymentMethods } from "@lib/data/payment"
 
 interface TemplateBasedCheckoutProps {
   cart: HttpTypes.StoreCart;
@@ -22,11 +24,19 @@ export default async function TemplateBasedCheckout({ cart, customer }: Template
     console.warn('[Checkout] No template found, using default');
   }
 
+  // Fetch shipping and payment methods for checkout
+  const availableShippingMethods = await listCartShippingMethods(cart.id);
+  const availablePaymentMethods = cart.region 
+    ? await listCartPaymentMethods(cart.region.id) 
+    : [];
+
   return (
     <CheckoutPageRenderer 
       template={template} 
       cart={cart} 
       customer={customer}
+      availableShippingMethods={availableShippingMethods}
+      availablePaymentMethods={availablePaymentMethods || []}
     />
   );
 }

@@ -10,7 +10,6 @@ import RelatedProducts from "@modules/products/components/related-products"
 import ProductInfo from "@modules/products/templates/product-info"
 import SkeletonRelatedProducts from "@modules/skeletons/templates/skeleton-related-products"
 import ProductActionsWrapper from "./product-actions-wrapper"
-import PixelTracker from "@modules/products/components/pixel-tracker"
 import { HttpTypes } from "@medusajs/types"
 
 type ThemedProductTemplateProps = {
@@ -45,35 +44,32 @@ const ThemedProductTemplate: React.FC<ThemedProductTemplateProps> = ({
   // Show default layout while loading
   if (loading) {
     return (
-      <>
-        <PixelTracker product={product} region={region} />
-        <div
-          className="content-container flex flex-col small:flex-row small:items-start py-6 relative"
-          data-testid="product-container"
-        >
-          <div className="flex flex-col small:sticky small:top-48 small:py-0 small:max-w-[300px] w-full py-8 gap-y-6">
-            <ProductInfo product={product} />
-            <ProductTabs product={product} />
-          </div>
-          <div className="block w-full relative">
-            <ImageGallery images={product?.images || []} />
-          </div>
-          <div className="flex flex-col small:sticky small:top-48 small:py-0 small:max-w-[300px] w-full py-8 gap-y-12">
-            <ProductOnboardingCta />
-            <Suspense
-              fallback={
-                <ProductActions
-                  disabled={true}
-                  product={product}
-                  region={region}
-                />
-              }
-            >
-              <ProductActionsWrapper id={product.id} region={region} />
-            </Suspense>
-          </div>
+      <div
+        className="content-container flex flex-col small:flex-row small:items-start py-6 relative"
+        data-testid="product-container"
+      >
+        <div className="flex flex-col small:sticky small:top-48 small:py-0 small:max-w-[300px] w-full py-8 gap-y-6">
+          <ProductInfo product={product} />
+          <ProductTabs product={product} />
         </div>
-      </>
+        <div className="block w-full relative">
+          <ImageGallery images={product?.images || []} />
+        </div>
+        <div className="flex flex-col small:sticky small:top-48 small:py-0 small:max-w-[300px] w-full py-8 gap-y-12">
+          <ProductOnboardingCta />
+          <Suspense
+            fallback={
+              <ProductActions
+                disabled={true}
+                product={product}
+                region={region}
+              />
+            }
+          >
+            <ProductActionsWrapper id={product.id} region={region} />
+          </Suspense>
+        </div>
+      </div>
     )
   }
 
@@ -187,7 +183,6 @@ const ThemedProductTemplate: React.FC<ThemedProductTemplateProps> = ({
   // Default: Standard layout
   return (
     <>
-      <PixelTracker product={product} region={region} />
       <div
         className="content-container flex flex-col small:flex-row small:items-start py-6 relative"
         data-testid="product-container"

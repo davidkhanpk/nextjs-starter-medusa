@@ -14,11 +14,22 @@ interface TemplateBasedOrderConfirmationProps {
  */
 export default async function TemplateBasedOrderConfirmation({ order }: TemplateBasedOrderConfirmationProps) {
   // Fetch order confirmation template from platform
-  const template = await fetchTemplate('order-confirmation') as OrderConfirmationTemplateType | null;
+  console.log('[Order Confirmation] Fetching ORDER_CONFIRMATION_PAGE template...');
+  const template = await fetchTemplate('ORDER_CONFIRMATION_PAGE').catch((error) => {
+    console.error('[Order Confirmation] Failed to fetch template:', error);
+    return null;
+  }) as OrderConfirmationTemplateType | null;
   
   // If no template, use default (renderer has fallback)
   if (!template) {
     console.warn('[Order Confirmation] No template found, using default');
+  } else {
+    console.log('[Order Confirmation] Template loaded:', {
+      id: template.id,
+      name: template.templateName,
+      hasZones: !!template.zones,
+      hasSettings: !!template.settings,
+    });
   }
 
   return (

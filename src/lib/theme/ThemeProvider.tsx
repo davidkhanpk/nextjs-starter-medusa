@@ -16,8 +16,16 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState<StoreTheme>(defaultTheme);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  // Wait for hydration
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
 
   useEffect(() => {
+    if (!isHydrated) return;
+
     // Fetch theme configuration from API
     fetch('/api/theme')
       .then((res) => {
@@ -37,7 +45,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
         applyTheme(defaultTheme);
         setLoading(false);
       });
-  }, []);
+  }, [isHydrated]);
 
   return (
     <ThemeContext.Provider value={{ theme, loading, error }}>
@@ -56,6 +64,7 @@ export function useTheme() {
 
 /**
  * Apply theme to document as CSS custom properties
+ * Only runs on client-side after hydration
  */
 function applyTheme(theme: StoreTheme) {
   if (typeof document === 'undefined') return;
@@ -109,23 +118,13 @@ function applyTheme(theme: StoreTheme) {
   root.style.setProperty('--spacing-lg', theme.layout.spacing.lg);
   root.style.setProperty('--spacing-xl', theme.layout.spacing.xl);
 
-  // Apply component styles
-  root.style.setProperty('--navbar-height', theme.components.navbar.height);
-  root.style.setProperty('--navbar-bg', theme.components.navbar.backgroundColor);
-  root.style.setProperty('--navbar-text', theme.components.navbar.textColor);
-  root.style.setProperty('--button-border-radius', theme.components.button.borderRadius);
-  root.style.setProperty('--button-padding-x', theme.components.button.paddingX);
-  root.style.setProperty('--button-padding-y', theme.components.button.paddingY);
-  root.style.setProperty('--product-card-border-radius', theme.components.productCard.borderRadius);
-  root.style.setProperty('--footer-bg', theme.components.footer.backgroundColor);
-  root.style.setProperty('--footer-text', theme.components.footer.textColor);
-
-  // Apply custom CSS if provided
+  // Apply custom CSS if provided (use data attribute to mark it)
   if (theme.advanced?.customCSS) {
     let customStyleEl = document.getElementById('custom-theme-css');
     if (!customStyleEl) {
       customStyleEl = document.createElement('style');
       customStyleEl.id = 'custom-theme-css';
+      customStyleEl.setAttribute('data-theme', 'custom');
       document.head.appendChild(customStyleEl);
     }
     customStyleEl.textContent = theme.advanced.customCSS;

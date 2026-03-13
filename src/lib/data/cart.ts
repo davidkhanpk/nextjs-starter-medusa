@@ -378,8 +378,9 @@ export async function setAddresses(currentState: unknown, formData: FormData) {
     return e.message
   }
 
+  // Redirect to checkout without step query param (Puck templates show all sections)
   redirect(
-    `/${formData.get("shipping_address.country_code")}/checkout?step=delivery`
+    `/${formData.get("shipping_address.country_code")}/checkout`
   )
 }
 

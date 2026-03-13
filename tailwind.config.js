@@ -1,6 +1,7 @@
 const path = require("path")
 
 module.exports = {
+  important: true, // Make Tailwind utilities !important to override other CSS
   darkMode: "class",
   presets: [require("@medusajs/ui-preset")],
   content: [
@@ -8,7 +9,31 @@ module.exports = {
     "./src/pages/**/*.{js,ts,jsx,tsx}",
     "./src/components/**/*.{js,ts,jsx,tsx}",
     "./src/modules/**/*.{js,ts,jsx,tsx}",
+    "./src/lib/**/*.{js,ts,jsx,tsx}",
     "./node_modules/@medusajs/ui/dist/**/*.{js,jsx,ts,tsx}",
+  ],
+  // Comprehensive safelist for commonly used utilities (especially from Puck/dynamic content)
+  safelist: [
+    // Text sizes
+    { pattern: /^text-(xs|sm|base|lg|xl|2xl|3xl|4xl|5xl|6xl|7xl|8xl|9xl)$/ },
+    // Font weights
+    { pattern: /^font-(thin|extralight|light|normal|medium|semibold|bold|extrabold|black)$/ },
+    // Margins
+    { pattern: /^m[trblxy]?-(0|1|2|3|4|5|6|8|10|12|16|20|24|32|40|48|56|64|72|80|96)$/ },
+    // Padding  
+    { pattern: /^p[trblxy]?-(0|1|2|3|4|5|6|8|10|12|16|20|24|32|40|48|56|64|72|80|96)$/ },
+    // Width/Height
+    { pattern: /^(w|h)-(0|1|2|3|4|5|6|8|10|12|16|20|24|32|40|48|56|64|72|80|96|auto|full|screen|min|max|fit)$/ },
+    // Flexbox
+    { pattern: /^(flex|inline-flex|flex-row|flex-col|flex-wrap|flex-nowrap|items-|justify-|gap-)/ },
+    // Grid
+    { pattern: /^(grid|grid-cols-|grid-rows-|col-span-|row-span-)/ },
+    // Colors (bg, text, border)
+    { pattern: /^(bg|text|border)-(white|black|gray|red|yellow|green|blue|indigo|purple|pink)(-50|-100|-200|-300|-400|-500|-600|-700|-800|-900)?$/ },
+    // Rounded corners
+    { pattern: /^rounded(-none|-sm|-md|-lg|-xl|-2xl|-3xl|-full)?$/ },
+    // Shadows
+    { pattern: /^shadow(-sm|-md|-lg|-xl|-2xl|-inner|-none)?$/ },
   ],
   theme: {
     extend: {
@@ -21,7 +46,35 @@ module.exports = {
         padding: "padding-top padding-right padding-bottom padding-left",
       },
       colors: {
-        // Theme colors (from CSS variables set by ThemeProvider)
+        // ===== NEW THEME TOKEN SYSTEM =====
+        // Brand colors (from theme.globalSettings.colors.tokens.brand)
+        'brand-primary': 'var(--theme-brand-primary)',
+        'brand-secondary': 'var(--theme-brand-secondary)',
+        'brand-accent': 'var(--theme-brand-accent)',
+        'brand-muted': 'var(--theme-brand-muted)',
+        
+        // Text colors (from theme.globalSettings.colors.tokens.text)
+        'text-heading': 'var(--theme-text-heading)',
+        'text-body': 'var(--theme-text-body)',
+        'text-muted': 'var(--theme-text-muted)',
+        'text-link': 'var(--theme-text-link)',
+        'text-link-hover': 'var(--theme-text-linkHover)',
+        'text-inverse': 'var(--theme-text-inverse)',
+        
+        // UI colors (from theme.globalSettings.colors.tokens.ui)
+        'ui-border': 'var(--theme-ui-border)',
+        'ui-border-hover': 'var(--theme-ui-borderHover)',
+        'ui-background': 'var(--theme-ui-background)',
+        'ui-surface': 'var(--theme-ui-surface)',
+        'ui-overlay': 'var(--theme-ui-overlay)',
+        
+        // Status colors (from theme.globalSettings.colors.tokens.status)
+        'status-success': 'var(--theme-status-success)',
+        'status-error': 'var(--theme-status-error)',
+        'status-warning': 'var(--theme-status-warning)',
+        'status-info': 'var(--theme-status-info)',
+        
+        // ===== LEGACY THEME SYSTEM (kept for backward compatibility) =====
         primary: 'var(--color-primary)',
         'primary-hover': 'var(--color-primary-hover)',
         'primary-text': 'var(--color-primary-text)',

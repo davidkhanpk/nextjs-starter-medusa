@@ -1,7 +1,7 @@
 'use client'
 
 import { HomepageSection } from '../../types'
-import Link from 'next/link'
+import Link from '@/components/common/SafeLink'
 
 interface RowSectionProps {
   section: HomepageSection

@@ -3,7 +3,19 @@
  * These mirror the backend types but are optimized for frontend consumption
  */
 
-export type TemplateType = 'cart' | 'checkout' | 'order-confirmation' | 'collection' | 'header' | 'footer' | 'sidebar';
+export type TemplateType = 
+  | 'PRODUCT_PAGE'
+  | 'PRODUCT_CARD'
+  | 'COLLECTION_PAGE'
+  | 'CATEGORY_PAGE'
+  | 'CART_PAGE'
+  | 'CHECKOUT_PAGE'
+  | 'ACCOUNT_PAGE'
+  | 'ORDER_CONFIRMATION_PAGE'
+  | 'HOMEPAGE'
+  | 'HEADER'
+  | 'FOOTER'
+  | 'SIDEBAR';
 
 export * from './types-advanced';
 
@@ -201,4 +213,13 @@ export interface TemplateResponse {
   status: string;
   isDefault: boolean;
   isPredefined?: boolean;
+  puckData?: {
+    content: any[];
+    root: any;
+    zones?: Record<string, any[]>;
+    context?: Record<string, any>;
+  };
+  theme?: {
+    globalSettings?: Record<string, any>;
+  };
 }

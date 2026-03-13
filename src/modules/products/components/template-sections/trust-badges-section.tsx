@@ -1,6 +1,6 @@
 import React from 'react'
 import { SectionProps } from './dynamic-section-renderer'
-import { LockClosedSolid, TruckSolid } from '@medusajs/icons'
+import { LockClosedSolid, TruckFast } from '@medusajs/icons'
 
 export default function TrustBadgesSection({ section }: SectionProps) {
   return (
@@ -13,7 +13,7 @@ export default function TrustBadgesSection({ section }: SectionProps) {
       )}
       {section.showFreeShipping !== false && (
         <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
-          <TruckSolid className="w-6 h-6 text-blue-600" />
+          <TruckFast className="w-6 h-6 text-blue-600" />
           <span className="font-semibold">Free Shipping</span>
         </div>
       )}

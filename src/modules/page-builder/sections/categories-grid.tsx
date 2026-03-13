@@ -6,7 +6,7 @@
 import { CategoriesGridSection as CategoriesGridSectionType } from '@lib/page-builder/types';
 import { sdk } from '@lib/config';
 import Image from 'next/image';
-import Link from 'next/link';
+import Link from '@/components/common/SafeLink';
 
 interface CategoriesGridSectionProps extends CategoriesGridSectionType {}
 

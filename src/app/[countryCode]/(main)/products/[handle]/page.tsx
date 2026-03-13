@@ -4,7 +4,10 @@ import { listProducts } from "@lib/data/products"
 import { getRegion, listRegions } from "@lib/data/regions"
 import ProductTemplate from "@modules/products/templates"
 import { HttpTypes } from "@medusajs/types"
-import { getDefaultProductTemplate } from "@lib/template"
+import { fetchTemplate } from "@lib/template/api"
+
+// Force dynamic rendering — this page uses cookies() and searchParams
+export const dynamic = 'force-dynamic'
 
 type Props = {
   params: Promise<{ countryCode: string; handle: string }>
@@ -12,45 +15,9 @@ type Props = {
 }
 
 export async function generateStaticParams() {
-  try {
-    const countryCodes = await listRegions().then((regions) =>
-      regions?.map((r) => r.countries?.map((c) => c.iso_2)).flat()
-    )
-
-    if (!countryCodes) {
-      return []
-    }
-
-    const promises = countryCodes.map(async (country) => {
-      const { response } = await listProducts({
-        countryCode: country,
-        queryParams: { limit: 100, fields: "handle" },
-      })
-
-      return {
-        country,
-        products: response.products,
-      }
-    })
-
-    const countryProducts = await Promise.all(promises)
-
-    return countryProducts
-      .flatMap((countryData) =>
-        countryData.products.map((product) => ({
-          countryCode: countryData.country,
-          handle: product.handle,
-        }))
-      )
-      .filter((param) => param.handle)
-  } catch (error) {
-    console.error(
-      `Failed to generate static paths for product pages: ${
-        error instanceof Error ? error.message : "Unknown error"
-      }.`
-    )
-    return []
-  }
+  // Return empty — pages render on-demand via SSR.
+  // Multi-tenant image has no Medusa backend at Docker build time.
+  return []
 }
 
 function getImagesForVariant(
@@ -62,7 +29,7 @@ function getImagesForVariant(
   }
 
   const variant = product.variants!.find((v) => v.id === selectedVariantId)
-  if (!variant || !variant.images.length) {
+  if (!variant || !variant.images?.length) {
     return product.images
   }
 
@@ -71,31 +38,42 @@ function getImagesForVariant(
 }
 
 export async function generateMetadata(props: Props): Promise<Metadata> {
-  const params = await props.params
-  const { handle } = params
-  const region = await getRegion(params.countryCode)
+  try {
+    const params = await props.params
+    const { handle } = params
+    const region = await getRegion(params.countryCode)
 
-  if (!region) {
-    notFound()
-  }
+    if (!region) {
+      notFound()
+    }
 
-  const product = await listProducts({
-    countryCode: params.countryCode,
-    queryParams: { handle },
-  }).then(({ response }) => response.products[0])
+    const product = await listProducts({
+      countryCode: params.countryCode,
+      queryParams: { handle },
+    }).then(({ response }) => response.products[0])
 
-  if (!product) {
-    notFound()
-  }
+    if (!product) {
+      notFound()
+    }
 
-  return {
-    title: `${product.title} | Medusa Store`,
-    description: `${product.title}`,
-    openGraph: {
+    return {
       title: `${product.title} | Medusa Store`,
       description: `${product.title}`,
-      images: product.thumbnail ? [product.thumbnail] : [],
-    },
+      openGraph: {
+        title: `${product.title} | Medusa Store`,
+        description: `${product.title}`,
+        images: product.thumbnail ? [product.thumbnail] : [],
+      },
+    }
+  } catch (error: any) {
+    // Re-throw notFound errors
+    if (error?.digest === 'NEXT_NOT_FOUND') {
+      throw error
+    }
+    console.error('[Product Page] generateMetadata error:', error)
+    return {
+      title: 'Product | Store',
+    }
   }
 }
 
@@ -115,15 +93,26 @@ export default async function ProductPage(props: Props) {
     queryParams: { handle: params.handle },
   }).then(({ response }) => response.products[0])
 
-  const images = getImagesForVariant(pricedProduct, selectedVariantId)
-
   if (!pricedProduct) {
     notFound()
   }
 
-  // Load product template
-  const storeId = process.env.STORE_ID || process.env.NEXT_PUBLIC_STORE_ID
-  const template = storeId ? await getDefaultProductTemplate(storeId) : null
+  const images = getImagesForVariant(pricedProduct, selectedVariantId)
+
+  // Load product template using fetchTemplate (Puck-based)
+  console.log('[Product Page] Fetching PRODUCT_PAGE template...')
+  const template = await fetchTemplate('PRODUCT_PAGE').catch((error) => {
+    console.error('[Product Page] Failed to fetch PRODUCT_PAGE template:', error)
+    return null
+  })
+
+  console.log('[Product Page] Product template fetched:', template ? 'SUCCESS' : 'FAILED')
+  
+  if (template) {
+    console.log('[Product Page] Template ID:', template.id)
+    console.log('[Product Page] Template Name:', template.templateName)
+    console.log('[Product Page] Has puckData:', !!template.puckData)
+  }
 
   return (
     <ProductTemplate

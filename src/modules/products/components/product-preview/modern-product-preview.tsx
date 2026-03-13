@@ -41,7 +41,7 @@ export default function ModernProductPreview({
     variants: product.variants?.map(variant => ({
       id: variant.id || '',
       title: variant.title || '',
-      thumbnail: variant.thumbnail || thumbnail,
+      thumbnail: variant.thumbnail || thumbnail || undefined,
     })) || [],
   }
 

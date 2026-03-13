@@ -4,7 +4,7 @@
 
 import { HeroSection as HeroSectionType } from '@lib/page-builder/types';
 import { buildTailwindClasses } from '@lib/page-builder/tailwind-mapper';
-import Link from 'next/link';
+import Link from '@/components/common/SafeLink';
 
 interface HeroSectionProps extends HeroSectionType {}
 

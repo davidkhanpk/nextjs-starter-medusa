@@ -15,8 +15,10 @@ import ItemsTemplate from '@modules/cart/templates/items';
 import Summary from '@modules/cart/templates/summary';
 import EmptyCartMessage from '@modules/cart/components/empty-cart-message';
 import SignInPrompt from '@modules/cart/components/sign-in-prompt';
-import Link from 'next/link';
+import Link from '@/components/common/SafeLink';
 import { ShoppingCart, ArrowLeft } from 'lucide-react';
+import PuckRenderer from "@/components/puck/PuckRenderer";
+import { TemplateErrorBoundary } from "./TemplateErrorBoundary";
 
 interface CartPageRendererProps {
   template: CartTemplate | null;
@@ -27,9 +29,28 @@ interface CartPageRendererProps {
 /**
  * Cart Page Renderer
  * Renders cart page based on template configuration
+ * Supports both Puck visual editor and zone-based templates
  */
 export function CartPageRenderer({ template, cart, customer }: CartPageRendererProps) {
-  // Default template if none provided
+  // Use Puck renderer if template is Puck-based
+  if (template && (template as any).editorType === 'PUCK' && (template as any).puckData) {
+    return (
+      <TemplateErrorBoundary templateName={(template as any).templateName || 'Cart Page'}>
+        <PuckRenderer
+          data={{
+            ...(template as any).puckData,
+            context: {
+              ...((template as any).puckData.context || {}),
+              cart,
+              customer,
+            }
+          }}
+        />
+      </TemplateErrorBoundary>
+    );
+  }
+
+  // Default template if none provided (zone-based)
   const config = template || getDefaultCartTemplate();
   
   const { zones, settings } = config;

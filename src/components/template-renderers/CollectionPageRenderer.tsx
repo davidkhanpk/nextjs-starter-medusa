@@ -1,6 +1,8 @@
 'use client'
 
 import React, { useState } from 'react';
+import PuckRenderer from "@/components/puck/PuckRenderer";
+import { TemplateErrorBoundary } from "./TemplateErrorBoundary";
 import { CollectionTemplate } from '@lib/template/types';
 import { HttpTypes } from "@medusajs/types"
 import { 
@@ -14,7 +16,7 @@ import {
   aspectRatioToTailwind,
   getHoverEffectClasses
 } from '@lib/template/tailwind-mapper';
-import Link from 'next/link';
+import Link from '@/components/common/SafeLink';
 import { ChevronDown, Grid, List, SlidersHorizontal, X } from 'lucide-react';
 import ProductPreview from '@modules/products/components/product-preview';
 
@@ -27,8 +29,28 @@ interface CollectionPageRendererProps {
 /**
  * Collection Page Renderer
  * Renders product collection/category pages with filters, sorting, and grid layouts
+ * Supports both Puck visual editor and zone-based templates
  */
 export function CollectionPageRenderer({ template, collection, products }: CollectionPageRendererProps) {
+  // Check if this is a Puck template
+  if (template && (template as any).editorType === 'PUCK' && (template as any).puckData) {
+    return (
+      <TemplateErrorBoundary templateName={(template as any).templateName || 'Collection Page'}>
+        <PuckRenderer
+          data={{
+            ...(template as any).puckData,
+            context: {
+              ...((template as any).puckData.context || {}),
+              collection,
+              products,
+            }
+          }}
+        />
+      </TemplateErrorBoundary>
+    );
+  }
+
+  // Zone-based rendering
   const config = template || getDefaultCollectionTemplate();
   const { zones, settings } = config;
 

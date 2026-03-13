@@ -1,17 +1,17 @@
 import { listCartShippingMethods } from "@lib/data/fulfillment"
 import { listCartPaymentMethods } from "@lib/data/payment"
 import { HttpTypes } from "@medusajs/types"
-import ThemedCheckoutForm from "./themed-checkout-form"
-import { ProductTemplate } from "@lib/template"
+import Addresses from "@modules/checkout/components/addresses"
+import Payment from "@modules/checkout/components/payment"
+import Review from "@modules/checkout/components/review"
+import Shipping from "@modules/checkout/components/shipping"
 
 export default async function CheckoutForm({
   cart,
   customer,
-  template,
 }: {
   cart: HttpTypes.StoreCart | null
   customer: HttpTypes.StoreCustomer | null
-  template?: ProductTemplate | null
 }) {
   if (!cart) {
     return null
@@ -25,12 +25,14 @@ export default async function CheckoutForm({
   }
 
   return (
-    <ThemedCheckoutForm
-      cart={cart}
-      customer={customer}
-      shippingMethods={shippingMethods}
-      paymentMethods={paymentMethods}
-      template={template}
-    />
+    <div className="w-full grid grid-cols-1 gap-y-8">
+      <Addresses cart={cart} customer={customer} />
+
+      <Shipping cart={cart} availableShippingMethods={shippingMethods} />
+
+      <Payment cart={cart} availablePaymentMethods={paymentMethods} />
+
+      <Review cart={cart} />
+    </div>
   )
 }

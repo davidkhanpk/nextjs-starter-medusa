@@ -4,7 +4,7 @@
 
 import { BannerSection as BannerSectionType } from '@lib/page-builder/types';
 import Image from 'next/image';
-import Link from 'next/link';
+import Link from '@/components/common/SafeLink';
 
 interface BannerSectionProps extends BannerSectionType {}
 

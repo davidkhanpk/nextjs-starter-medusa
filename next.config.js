@@ -24,6 +24,10 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  experimental: {
+    optimizeCss: true,
+  },
+  output: "standalone",
   images: {
     remotePatterns: [
       {
@@ -41,6 +45,18 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "medusa-server-testing.s3.us-east-1.amazonaws.com",
+      },
+      {
+        protocol: "https",
+        hostname: "files.shopikool.store",
+      },
+      {
+        protocol: "https",
+        hostname: "files.shopingvilla.store",
+      },
+      {
+        protocol: "https",
+        hostname: "**.r2.cloudflarestorage.com",
       },
       ...(S3_HOSTNAME && S3_PATHNAME
         ? [

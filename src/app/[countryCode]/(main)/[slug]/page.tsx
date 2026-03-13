@@ -11,16 +11,16 @@ interface PageProps {
 
 // Get page data by slug
 async function getPageBySlug(slug: string) {
-  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL?.replace('/api', '') || 'http://localhost:3001'
-  const storeId = process.env.NEXT_PUBLIC_STORE_ID
+  const backendUrl = process.env.SHOPIKOOL_API_URL || 'http://localhost:3000'
+  const storeId = process.env.STORE_ID
 
   if (!storeId) {
-    throw new Error('NEXT_PUBLIC_STORE_ID is not configured')
+    throw new Error('STORE_ID is not configured')
   }
 
   try {
     const response = await fetch(
-      `${backendUrl}/api/stores/${storeId}/pages/slug/${slug}`,
+      `${backendUrl}/stores/${storeId}/pages/slug/${slug}`,
       {
         next: { revalidate: 60 }, // Revalidate every 60 seconds
       }

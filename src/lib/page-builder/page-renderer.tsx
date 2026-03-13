@@ -150,7 +150,7 @@ export async function getPageConfig(
 ): Promise<PageSection[]> {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/stores/${storeId}/pages/default/${pageType}`,
+      `${process.env.SHOPIKOOL_API_URL}/stores/${storeId}/pages/default/${pageType}`,
       {
         next: { revalidate: 60 }, // Cache for 1 minute
       }
@@ -177,7 +177,7 @@ export async function getCustomPageConfig(
 ): Promise<PageSection[]> {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/stores/${storeId}/pages/slug/${slug}`,
+      `${process.env.SHOPIKOOL_API_URL}/stores/${storeId}/pages/slug/${slug}`,
       {
         next: { revalidate: 60 }, // Cache for 1 minute
       }

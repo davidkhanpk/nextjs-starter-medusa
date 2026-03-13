@@ -89,11 +89,11 @@ const ThemedHero = () => {
               style={{
                 backgroundColor: theme.colors.secondary,
                 color: theme.colors.secondaryText,
-                borderRadius: theme.components.button.borderRadius,
-                paddingLeft: theme.components.button.paddingX,
-                paddingRight: theme.components.button.paddingX,
-                paddingTop: theme.components.button.paddingY,
-                paddingBottom: theme.components.button.paddingY,
+                borderRadius: theme.layout.borderRadius.md,
+                paddingLeft: theme.layout.spacing.md,
+                paddingRight: theme.layout.spacing.md,
+                paddingTop: theme.layout.spacing.sm,
+                paddingBottom: theme.layout.spacing.sm,
               }}
             >
               {ctaText}
@@ -159,11 +159,11 @@ const ThemedHero = () => {
               style={{
                 backgroundColor: theme.colors.primary,
                 color: theme.colors.primaryText,
-                borderRadius: theme.components.button.borderRadius,
-                paddingLeft: theme.components.button.paddingX,
-                paddingRight: theme.components.button.paddingX,
-                paddingTop: theme.components.button.paddingY,
-                paddingBottom: theme.components.button.paddingY,
+                borderRadius: theme.layout.borderRadius.md,
+                paddingLeft: theme.layout.spacing.md,
+                paddingRight: theme.layout.spacing.md,
+                paddingTop: theme.layout.spacing.sm,
+                paddingBottom: theme.layout.spacing.sm,
               }}
             >
               {ctaText}
@@ -213,7 +213,11 @@ const ThemedHero = () => {
             style={{
               backgroundColor: theme.colors.secondary,
               color: theme.colors.secondaryText,
-              borderRadius: theme.components.button.borderRadius,
+              borderRadius: theme.layout.borderRadius.md,
+              paddingLeft: theme.layout.spacing.md,
+              paddingRight: theme.layout.spacing.md,
+              paddingTop: theme.layout.spacing.sm,
+              paddingBottom: theme.layout.spacing.sm,
             }}
           >
             {ctaText}

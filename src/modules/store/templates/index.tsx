@@ -3,6 +3,7 @@ import { Suspense } from "react"
 import SkeletonProductGrid from "@modules/skeletons/templates/skeleton-product-grid"
 import RefinementList from "@modules/store/components/refinement-list"
 import { SortOptions } from "@modules/store/components/refinement-list/sort-products"
+import { TemplateResponse } from "@lib/template/types"
 
 import PaginatedProducts from "./paginated-products"
 
@@ -10,10 +11,12 @@ const StoreTemplate = ({
   sortBy,
   page,
   countryCode,
+  productCardTemplate,
 }: {
   sortBy?: SortOptions
   page?: string
   countryCode: string
+  productCardTemplate?: TemplateResponse | null
 }) => {
   const pageNumber = page ? parseInt(page) : 1
   const sort = sortBy || "created_at"
@@ -33,6 +36,7 @@ const StoreTemplate = ({
             sortBy={sort}
             page={pageNumber}
             countryCode={countryCode}
+            productCardTemplate={productCardTemplate}
           />
         </Suspense>
       </div>

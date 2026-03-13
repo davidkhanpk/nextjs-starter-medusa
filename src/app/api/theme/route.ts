@@ -24,7 +24,7 @@ export async function GET(request: Request) {
     }
 
     // Fetch from Shopikool Platform (PUBLIC endpoint - no auth required)
-    const platformApiUrl = process.env.NEXT_PUBLIC_SHOPIKOOL_API_URL || 'http://localhost:3000/api';
+    const platformApiUrl = process.env.SHOPIKOOL_API_URL || 'http://localhost:3000/api';
     const themeUrl = `${platformApiUrl}/public/stores/id/${storeId}/theme`;
     
     console.log('[Theme API] Fetching from:', themeUrl);
@@ -66,7 +66,7 @@ export async function GET(request: Request) {
 function getStoreId(request: Request): string | null {
   // Development: Use env variable
   if (process.env.NODE_ENV === 'development') {
-    return process.env.NEXT_PUBLIC_STORE_ID || null;
+    return process.env.STORE_ID || null;
   }
 
   // Production: Extract from subdomain

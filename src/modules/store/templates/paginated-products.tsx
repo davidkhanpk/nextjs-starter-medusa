@@ -3,6 +3,7 @@ import { getRegion } from "@lib/data/regions"
 import ProductPreview from "@modules/products/components/product-preview"
 import { Pagination } from "@modules/store/components/pagination"
 import { SortOptions } from "@modules/store/components/refinement-list/sort-products"
+import { TemplateResponse } from "@lib/template/types"
 
 const PRODUCT_LIMIT = 12
 
@@ -21,6 +22,7 @@ export default async function PaginatedProducts({
   categoryId,
   productsIds,
   countryCode,
+  productCardTemplate,
 }: {
   sortBy?: SortOptions
   page: number
@@ -28,6 +30,7 @@ export default async function PaginatedProducts({
   categoryId?: string
   productsIds?: string[]
   countryCode: string
+  productCardTemplate?: TemplateResponse | null
 }) {
   const queryParams: PaginatedProductsParams = {
     limit: 12,
@@ -75,7 +78,7 @@ export default async function PaginatedProducts({
         {products.map((p) => {
           return (
             <li key={p.id}>
-              <ProductPreview product={p} region={region} />
+              <ProductPreview product={p} region={region} countryCode={countryCode} productCardTemplate={productCardTemplate} />
             </li>
           )
         })}
