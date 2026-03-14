@@ -86,7 +86,7 @@ export const Spacer: ComponentConfig<SpacerProps> = {
     };
 
     return (
-      <div id={id} className={`${heightClasses[height]} w-full flex items-center`}>
+      <div id={id} className={`${heightClasses[height] || 'h-8'} w-full flex items-center`}>
         {showDivider && (
           <hr
             style={{

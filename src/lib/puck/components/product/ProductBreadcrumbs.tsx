@@ -123,14 +123,14 @@ export const ProductBreadcrumbs: ComponentConfig<ProductBreadcrumbsProps> = {
 
                 {isLast ? (
                   <span
-                    className={`text-gray-900 font-medium ${textClasses[textTransform]}`}
+                    className={`text-gray-900 font-medium ${textClasses[textTransform] || ''}`}
                   >
                     {crumb.label}
                   </span>
                 ) : (
                   <Link
                     href={crumb.href}
-                    className={`text-gray-600 hover:text-gray-900 transition-colors flex items-center gap-1 ${textClasses[textTransform]}`}
+                    className={`text-gray-600 hover:text-gray-900 transition-colors flex items-center gap-1 ${textClasses[textTransform] || ''}`}
                   >
                     {isFirst && showHomeIcon && (
                       <Home className="w-4 h-4" />

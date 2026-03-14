@@ -42,17 +42,7 @@ interface PuckRendererProps {
 }
 
 export default function PuckRenderer({ data, className = '', theme = {} }: PuckRendererProps) {
-  console.log('[PuckRenderer] Rendering with data:', {
-    hasContent: !!data?.content,
-    contentLength: data?.content?.length,
-    hasZones: !!data?.zones,
-    zonesKeys: data?.zones ? Object.keys(data.zones) : [],
-    hasContext: !!data?.context,
-    availableComponents: Object.keys(defaultPuckConfig.components || {}),
-  });
-
   if (!data || !data.content) {
-    console.warn('[PuckRenderer] No content available in data');
     return (
       <div className="flex items-center justify-center min-h-[400px] text-gray-500">
         <div className="text-center">
@@ -65,10 +55,6 @@ export default function PuckRenderer({ data, className = '', theme = {} }: PuckR
 
   // Extract product from context if available
   const product = data.context?.product
-
-  console.log('[PuckRenderer] Starting render with config:', {
-    componentCount: Object.keys(defaultPuckConfig.components || {}).length
-  });
 
   return (
     <PuckContextProvider data={data} theme={theme}>

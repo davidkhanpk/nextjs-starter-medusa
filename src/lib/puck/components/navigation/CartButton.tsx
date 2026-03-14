@@ -3,7 +3,7 @@
 import React from "react";
 import { ComponentConfig } from "@measured/puck";
 import { ShoppingCart } from "lucide-react";
-import { usePuckContext } from "@/components/puck/PuckContextProvider";
+import { useCart } from "@lib/hooks/useCart";
 import CartDrawer from "@/components/cart/CartDrawer";
 
 export interface CartButtonProps {
@@ -113,32 +113,14 @@ export const CartButton: ComponentConfig<CartButtonProps> = {
     badgeTextColor,
     style,
   }) => {
-    const context = usePuckContext();
-    const [cartCount, setCartCount] = React.useState(0);
+    const { cart } = useCart();
     const [isHovered, setIsHovered] = React.useState(false);
     const [drawerOpen, setDrawerOpen] = React.useState(false);
 
-    // Fetch cart count from context or API
-    React.useEffect(() => {
-      if (context?.cartItemsCount !== undefined) {
-        setCartCount(context.cartItemsCount);
-        return;
-      }
-
-      const fetchCartCount = async () => {
-        try {
-          const response = await fetch('/api/cart/count');
-          if (response.ok) {
-            const data = await response.json();
-            setCartCount(data.count || 0);
-          }
-        } catch (error) {
-          console.error('Failed to fetch cart count:', error);
-        }
-      };
-
-      fetchCartCount();
-    }, [context]);
+    // Derive count from shared cart state (auto-syncs via useCart events)
+    const cartCount = React.useMemo(() => {
+      return cart?.items?.reduce((acc, item) => acc + item.quantity, 0) ?? 0;
+    }, [cart]);
 
     const sizeMap = {
       sm: 20,
@@ -146,7 +128,7 @@ export const CartButton: ComponentConfig<CartButtonProps> = {
       lg: 28,
     };
 
-    const iconSizeValue = sizeMap[iconSize];
+    const iconSizeValue = sizeMap[iconSize] || 24;
 
     const badgePositionClasses = {
       "top-right": "-top-2 -right-2",
@@ -165,7 +147,7 @@ export const CartButton: ComponentConfig<CartButtonProps> = {
         <button
           type="button"
           onClick={() => setDrawerOpen(true)}
-          className={`relative flex items-center gap-2 transition-all ${styleClasses[style]}`}
+          className={`relative flex items-center gap-2 transition-all ${styleClasses[style] || 'p-2 rounded-full hover:bg-gray-100'}`}
           style={{
             color: isHovered ? hoverColor : iconColor,
             backgroundColor: style === 'filled' ? (isHovered ? hoverColor : iconColor) : 'transparent',
@@ -185,7 +167,7 @@ export const CartButton: ComponentConfig<CartButtonProps> = {
 
             {showBadge && cartCount > 0 && (
               <span
-                className={`absolute ${badgePositionClasses[badgePosition]} rounded-full min-w-[20px] h-5 flex items-center justify-center text-xs font-bold px-1.5`}
+                className={`absolute ${badgePositionClasses[badgePosition] || '-top-2 -right-2'} rounded-full min-w-[20px] h-5 flex items-center justify-center text-xs font-bold px-1.5`}
                 style={{
                   backgroundColor: badgeBackgroundColor,
                   color: badgeTextColor,

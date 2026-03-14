@@ -210,9 +210,9 @@ export const AddToCart: ComponentConfig<AddToCartProps> = {
 
   render: (props) => {
     const { 
-      text, variant, size, fullWidth, showIcon, disabled,
-      backgroundColor, textColor, hoverBackgroundColor, hoverTextColor, borderColor, useThemeColors,
-      marginTop, marginBottom, marginLeft, marginRight, paddingX, paddingY, borderRadius
+      text, variant = 'primary', size = 'md', fullWidth = false, showIcon = true, disabled = false,
+      backgroundColor = '#000000', textColor = '#ffffff', hoverBackgroundColor = '#1f2937', hoverTextColor = '#ffffff', borderColor = '#000000', useThemeColors = false,
+      marginTop = 'mt-4', marginBottom = 'mb-4', marginLeft = 'ml-0', marginRight = 'mr-0', paddingX = 'px-6', paddingY = 'py-3', borderRadius = 'rounded-lg'
     } = props;
     
     const { product, countryCode, selectedVariant, theme, quantity } = useProduct();
@@ -220,9 +220,20 @@ export const AddToCart: ComponentConfig<AddToCartProps> = {
     const [justAdded, setJustAdded] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
 
-    useEffect(() => {
-      console.log('[AddToCart] Selected variant changed:', selectedVariant?.id || 'none');
-    }, [selectedVariant]);
+    // Variant and size class maps (declared early so preview block can use them)
+    const variantClassesPreview: Record<string, string> = {
+      primary: "bg-black text-white hover:bg-gray-900",
+      secondary: "bg-gray-200 text-gray-900 hover:bg-gray-300",
+      outline: "border-2 border-black text-black hover:bg-black hover:text-white bg-transparent",
+      ghost: "text-black hover:bg-gray-100 bg-transparent",
+      custom: "",
+    };
+
+    const sizeClasses: Record<string, string> = {
+      sm: "text-sm",
+      md: "text-base",
+      lg: "text-lg",
+    };
 
     // Show visual preview even in editor (when product is null)
     if (!product) {
@@ -296,21 +307,6 @@ export const AddToCart: ComponentConfig<AddToCartProps> = {
       } catch (error) {
         console.error("Failed to add to cart:", error);
       }
-    };
-
-    // Preview classes for editor
-    const variantClassesPreview = {
-      primary: "bg-black text-white hover:bg-gray-900",
-      secondary: "bg-gray-200 text-gray-900 hover:bg-gray-300",
-      outline: "border-2 border-black text-black hover:bg-black hover:text-white bg-transparent",
-      ghost: "text-black hover:bg-gray-100 bg-transparent",
-      custom: "",
-    };
-
-    const sizeClasses = {
-      sm: "text-sm",
-      md: "text-base",
-      lg: "text-lg",
     };
 
     // Resolve colors from theme tokens if using theme colors

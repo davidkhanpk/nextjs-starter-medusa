@@ -101,12 +101,12 @@ export const StatsSection: React.FC<StatsSectionProps> = ({
     <div
       ref={sectionRef}
       style={{ backgroundColor }}
-      className={`w-full ${spacingClasses[spacing]} ${borderRadiusClasses[borderRadius]}`}
+      className={`w-full ${spacingClasses[spacing] || 'py-12 px-6'} ${borderRadiusClasses[borderRadius] || 'rounded-none'}`}
     >
       <div className="max-w-7xl mx-auto px-4">
         {/* Header */}
         {(title || subtitle) && (
-          <div className={`mb-12 ${alignmentClasses[alignment]}`}>
+          <div className={`mb-12 ${alignmentClasses[alignment] || 'text-center'}`}>
             {title && (
               <h2 className="text-3xl font-bold mb-2" style={{ color: textColor }}>
                 {title}
@@ -122,9 +122,9 @@ export const StatsSection: React.FC<StatsSectionProps> = ({
 
         {/* Stats Grid */}
         <div className={`grid grid-cols-1 md:grid-cols-${columns} gap-8 relative`}>
-          {stats.map((stat, index) => (
+          {(stats || []).map((stat, index) => (
             <div key={stat.id} className="relative">
-              <div className={`${alignmentClasses[alignment]} p-6`}>
+              <div className={`${alignmentClasses[alignment] || 'text-center'} p-6`}>
                 {/* Icon */}
                 <div className="text-4xl mb-4" style={{ color: stat.iconColor }}>
                   {getIconEmoji(stat.icon)}

@@ -200,7 +200,7 @@ export const ContactInfo: ComponentConfig<ContactInfoProps> = {
     };
 
     return (
-      <div className={`${layoutClasses[layout]} ${gapClasses[gap]}`}>
+      <div className={`${layoutClasses[layout] || 'flex flex-col'} ${gapClasses[gap] || 'gap-4'}`}>
         {contactItems.map((item, index) => {
           const IconComponent = item.icon;
           const content = (
@@ -213,7 +213,7 @@ export const ContactInfo: ComponentConfig<ContactInfoProps> = {
                 />
               )}
               <div 
-                className={`${fontSizeClasses[fontSize]} whitespace-pre-line`}
+                className={`${fontSizeClasses[fontSize] || 'text-sm'} whitespace-pre-line`}
                 style={{ color: textColor }}
               >
                 {item.content}

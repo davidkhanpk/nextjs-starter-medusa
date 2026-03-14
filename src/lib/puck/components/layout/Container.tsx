@@ -39,7 +39,6 @@ export const Container: ComponentConfig<ContainerProps> = {
   },
 
   render: ({ maxWidth, padding }) => {
-    console.log('[Container] Rendering with props:', { maxWidth, padding });
     const maxWidthClasses = {
       sm: "max-w-screen-sm",
       md: "max-w-screen-md",
@@ -58,7 +57,7 @@ export const Container: ComponentConfig<ContainerProps> = {
 
     return (
       <div
-        className={`mx-auto ${maxWidthClasses[maxWidth]} ${paddingClasses[padding]}`}
+        className={`mx-auto ${maxWidthClasses[maxWidth] || 'max-w-screen-xl'} ${paddingClasses[padding] || 'px-6'}`}
         style={{ minHeight: '80px' }}
       >
         <DropZone zone="content" />

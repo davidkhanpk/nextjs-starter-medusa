@@ -159,10 +159,10 @@ export const Logo: ComponentConfig<LogoProps> = {
         ) : null}
         {(showText || !hasImage) && text && (
           <span 
-            className={`${textSizeClasses[textSize]}`}
+            className={`${textSizeClasses[textSize] || 'text-xl'}`}
             style={{ 
               color: textColor,
-              fontWeight: fontWeightMap[textWeight],
+              fontWeight: fontWeightMap[textWeight] || 'bold',
             }}
           >
             {text}

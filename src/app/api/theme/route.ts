@@ -27,8 +27,6 @@ export async function GET(request: Request) {
     const platformApiUrl = process.env.SHOPIKOOL_API_URL || 'http://localhost:3000/api';
     const themeUrl = `${platformApiUrl}/public/stores/id/${storeId}/theme`;
     
-    console.log('[Theme API] Fetching from:', themeUrl);
-
     const response = await fetch(themeUrl, {
       headers: {
         'Content-Type': 'application/json',
@@ -50,8 +48,6 @@ export async function GET(request: Request) {
     // Map platform theme to storefront
     const storefrontTheme = mapPlatformThemeToStorefront(platformTheme);
     
-    console.log('[Theme API] Theme loaded for store:', storeId);
-
     return NextResponse.json({ 
       theme: storefrontTheme,
       customCSS: platformTheme.customCSS || null,

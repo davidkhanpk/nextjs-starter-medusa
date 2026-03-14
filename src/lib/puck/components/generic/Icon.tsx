@@ -242,8 +242,8 @@ export const Icon: ComponentConfig<IconProps> = {
     };
 
     const className = [
-      sizeClasses[size],
-      alignmentClasses[alignment],
+      sizeClasses[size] || 'w-6 h-6',
+      alignmentClasses[alignment] || 'mx-auto',
       marginTopClasses[marginTop || 'none'],
       marginBottomClasses[marginBottom || 'md'],
     ].filter(Boolean).join(' ');

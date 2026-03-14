@@ -144,10 +144,10 @@ export const FlexRow: ComponentConfig<FlexRowProps> = {
         style={{
           display: "flex",
           flexDirection: "row",
-          justifyContent: justifyContentMap[justifyContent],
-          alignItems: alignItemsMap[alignItems],
-          flexWrap: wrap,
-          gap: gapValues[gap],
+          justifyContent: justifyContentMap[justifyContent] || 'space-between',
+          alignItems: alignItemsMap[alignItems] || 'center',
+          flexWrap: wrap || 'nowrap',
+          gap: gapValues[gap] || '1rem',
           width: fullWidth ? "100%" : "auto",
           maxWidth: fullWidth ? undefined : maxWidth,
           padding,
@@ -162,10 +162,10 @@ export const FlexRow: ComponentConfig<FlexRowProps> = {
           style={{
             display: "flex",
             flexDirection: "row",
-            justifyContent: justifyContentMap[justifyContent],
-            alignItems: alignItemsMap[alignItems],
-            flexWrap: wrap,
-            gap: gapValues[gap],
+            justifyContent: justifyContentMap[justifyContent] || 'space-between',
+            alignItems: alignItemsMap[alignItems] || 'center',
+            flexWrap: wrap || 'nowrap',
+            gap: gapValues[gap] || '1rem',
             width: "100%",
           }}
         />

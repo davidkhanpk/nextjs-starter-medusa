@@ -111,7 +111,7 @@ export const ProductDescription: ComponentConfig<ProductDescriptionProps> = {
   },
 
   render: (props) => {
-    const { fontSize, color, lineHeight, maxWidth, marginTop, marginBottom, paddingX, paddingY } = props;
+    const { fontSize = 'base', color = 'gray', lineHeight = 'normal', maxWidth = 'prose', marginTop = 'mt-4', marginBottom = 'mb-4', paddingX = 'px-0', paddingY = 'py-0' } = props;
     const { product } = useProduct();
 
     const sizeClasses = {
@@ -141,8 +141,8 @@ export const ProductDescription: ComponentConfig<ProductDescriptionProps> = {
     // Show visual preview even in editor
     if (!product || !product.description) {
       return (
-        <div className={`${marginTop} ${marginBottom} ${paddingX} ${paddingY}`}>
-          <div className={`text-gray-400 italic ${sizeClasses[fontSize]} ${lineHeightClasses[lineHeight]} ${maxWidthClasses[maxWidth]}`}>
+        <div className={`${marginTop || ''} ${marginBottom || ''} ${paddingX || ''} ${paddingY || ''}`}>
+          <div className={`text-gray-400 italic ${sizeClasses[fontSize] || 'text-base'} ${lineHeightClasses[lineHeight] || 'leading-normal'} ${maxWidthClasses[maxWidth] || 'max-w-prose'}`}>
             <p>Product description will appear here. This could be a detailed explanation of the product features, materials, sizing information, and care instructions.</p>
             <p className="mt-2">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
           </div>
@@ -153,12 +153,12 @@ export const ProductDescription: ComponentConfig<ProductDescriptionProps> = {
     return (
       <div
         className={`
-          ${sizeClasses[fontSize]} 
-          ${colorClasses[color]} 
-          ${lineHeightClasses[lineHeight]} 
-          ${maxWidthClasses[maxWidth]} 
-          ${marginTop} ${marginBottom} 
-          ${paddingX} ${paddingY}
+          ${sizeClasses[fontSize] || 'text-base'} 
+          ${colorClasses[color] || 'text-gray-700'} 
+          ${lineHeightClasses[lineHeight] || 'leading-normal'} 
+          ${maxWidthClasses[maxWidth] || 'max-w-prose'} 
+          ${marginTop || ''} ${marginBottom || ''} 
+          ${paddingX || ''} ${paddingY || ''}
           prose prose-gray
         `}
         dangerouslySetInnerHTML={{ __html: product.description }}

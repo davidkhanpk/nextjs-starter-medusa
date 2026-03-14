@@ -138,9 +138,9 @@ export const Badge: ComponentConfig<BadgeProps> = {
         id={id}
         className={`
           inline-flex items-center font-medium
-          ${sizes[size]}
-          ${roundedClasses[rounded]}
-          ${!customBgColor && !customTextColor ? variants[variant] : ''}
+          ${sizes[size] || 'text-sm px-2.5 py-1'}
+          ${roundedClasses[rounded] || 'rounded-md'}
+          ${!customBgColor && !customTextColor ? (variants[variant] || 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200') : ''}
         `}
         style={Object.keys(style).length > 0 ? style : undefined}
       >

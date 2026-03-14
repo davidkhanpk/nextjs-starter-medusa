@@ -131,7 +131,7 @@ export const ProductTitle: ComponentConfig<ProductTitleProps> = {
   },
 
   render: (props) => {
-    const { tag = "h1", fontSize = "2xl", color = "black", alignment = "left", fontWeight = "bold", marginTop, marginBottom, paddingX, paddingY } = props;
+    const { tag = "h1", fontSize = "2xl", color = "black", alignment = "left", fontWeight = "bold", marginTop = 'mt-0', marginBottom = 'mb-4', paddingX = 'px-0', paddingY = 'py-0' } = props;
     const { product, theme } = useProduct()
     
     const sizeClasses = {
@@ -168,12 +168,12 @@ export const ProductTitle: ComponentConfig<ProductTitleProps> = {
     // Show visual preview even in editor
     if (!product) {
       const className = `
-        ${sizeClasses[fontSize]} 
-        ${colorClasses[color]} 
-        ${alignmentClasses[alignment]} 
-        ${weightClasses[fontWeight]}
-        ${marginTop} ${marginBottom}
-        ${paddingX} ${paddingY}
+        ${sizeClasses[fontSize] || 'text-2xl'} 
+        ${colorClasses[color] || 'text-black'} 
+        ${alignmentClasses[alignment] || 'text-left'} 
+        ${weightClasses[fontWeight] || 'font-bold'}
+        ${marginTop || ''} ${marginBottom || ''}
+        ${paddingX || ''} ${paddingY || ''}
         text-gray-400 italic
       `;
       const style = {
@@ -188,12 +188,12 @@ export const ProductTitle: ComponentConfig<ProductTitleProps> = {
     }
 
     const className = `
-      ${sizeClasses[fontSize]} 
-      ${colorClasses[color]} 
-      ${alignmentClasses[alignment]} 
-      ${weightClasses[fontWeight]}
-      ${marginTop} ${marginBottom}
-      ${paddingX} ${paddingY}
+      ${sizeClasses[fontSize] || 'text-2xl'} 
+      ${colorClasses[color] || 'text-black'} 
+      ${alignmentClasses[alignment] || 'text-left'} 
+      ${weightClasses[fontWeight] || 'font-bold'}
+      ${marginTop || ''} ${marginBottom || ''}
+      ${paddingX || ''} ${paddingY || ''}
     `;
     const style = {
       fontFamily: theme?.typography?.heading?.fontFamily,

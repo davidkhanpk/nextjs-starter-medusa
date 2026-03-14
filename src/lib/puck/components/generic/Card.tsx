@@ -128,9 +128,9 @@ export const Card: ComponentConfig<CardProps> = {
       <div
         id={id}
         className={`
-          ${paddingClasses[padding]}
-          ${shadowClasses[shadow]}
-          ${roundedClasses[rounded]}
+          ${paddingClasses[padding] || 'p-8'}
+          ${shadowClasses[shadow] || 'shadow-none'}
+          ${roundedClasses[rounded] || 'rounded-lg'}
           ${border ? 'border border-gray-200 dark:border-gray-700' : ''}
           ${hoverEffect ? 'transition-all duration-300 hover:shadow-xl hover:-translate-y-1' : ''}
         `}

@@ -175,9 +175,8 @@ export function getValidatedTokens(theme: any): TokenStructure {
     console.error('[Theme] Validation errors:', result.errors);
   }
   
-  if (result.warnings.length > 0) {
-    console.warn('[Theme] Validation warnings:', result.warnings);
-  }
+  // Warnings are non-critical (e.g. missing optional tokens like ui.overlay)
+  // Suppress to avoid noisy logs in production
   
   // Return validated tokens or defaults
   return result.valid ? (result.tokens as TokenStructure) : DEFAULT_THEME_TOKENS;

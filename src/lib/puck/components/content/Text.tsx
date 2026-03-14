@@ -180,20 +180,20 @@ export const Text: ComponentConfig<TextProps> = {
       <div
         className={`
           text-component
-          ${fontSizeClasses[props.fontSize]}
-          ${weightClasses[props.fontWeight]}
-          ${lineHeightClasses[props.lineHeight]}
-          ${alignClasses[props.textAlign]}
+          ${fontSizeClasses[props.fontSize] || 'text-base'}
+          ${weightClasses[props.fontWeight] || 'font-normal'}
+          ${lineHeightClasses[props.lineHeight] || 'leading-relaxed'}
+          ${alignClasses[props.textAlign] || 'text-left'}
         `}
         style={{
           color: resolveColor(props.color),
           maxWidth: props.maxWidth || undefined,
-          marginTop: `${props.marginTop}px`,
-          marginBottom: `${props.marginBottom}px`,
-          paddingLeft: `${props.paddingX}px`,
-          paddingRight: `${props.paddingX}px`,
-          paddingTop: `${props.paddingY}px`,
-          paddingBottom: `${props.paddingY}px`,
+          marginTop: props.marginTop != null ? `${props.marginTop}px` : '0px',
+          marginBottom: props.marginBottom != null ? `${props.marginBottom}px` : '16px',
+          paddingLeft: props.paddingX != null ? `${props.paddingX}px` : '0px',
+          paddingRight: props.paddingX != null ? `${props.paddingX}px` : '0px',
+          paddingTop: props.paddingY != null ? `${props.paddingY}px` : '0px',
+          paddingBottom: props.paddingY != null ? `${props.paddingY}px` : '0px',
         }}
       >
         {props.richText ? (

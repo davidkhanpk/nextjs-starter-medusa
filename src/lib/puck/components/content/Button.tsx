@@ -237,7 +237,7 @@ export const Button: ComponentConfig<ButtonProps> = {
     };
     
     return (
-      <div className={`button-wrapper flex ${alignmentClasses[props.alignment]}`}>
+      <div className={`button-wrapper flex ${alignmentClasses[props.alignment] || 'justify-start'}`}>
         <a
           href={props.url}
           target={props.openInNewTab ? "_blank" : undefined}
@@ -249,9 +249,9 @@ export const Button: ComponentConfig<ButtonProps> = {
             transition-all duration-200
             hover:scale-105
             active:scale-95
-            ${sizeClasses[props.size]}
-            ${radiusClasses[props.borderRadius]}
-            ${shadowClasses[props.shadow]}
+            ${sizeClasses[props.size] || 'px-6 py-3 text-base'}
+            ${radiusClasses[props.borderRadius] || 'rounded-md'}
+            ${shadowClasses[props.shadow] || 'shadow-none'}
             ${props.fullWidth ? "w-full justify-center" : ""}
           `}
           style={{

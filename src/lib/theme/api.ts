@@ -19,7 +19,6 @@ function getStoreId(): string | null {
   const storeId = process.env.STORE_ID;
   
   if (!storeId) {
-    console.warn('[Theme API] STORE_ID not found in environment variables');
     return null;
   }
   
@@ -59,11 +58,7 @@ export interface Theme {
 export async function fetchTheme(): Promise<Theme | null> {
   const storeId = getStoreId();
   
-  console.log('[Theme API] fetchTheme called');
-  console.log('[Theme API] Store ID from env:', storeId);
-  
   if (!storeId) {
-    console.error('[Theme API] Store ID not found in environment variables');
     return null;
   }
 
@@ -71,8 +66,6 @@ export async function fetchTheme(): Promise<Theme | null> {
     const apiUrl = getPlatformApiUrl();
     const url = `${apiUrl}/public/stores/id/${storeId}/theme`;
     
-    console.log('[Theme API] Fetching theme:', url);
-
     const response = await fetch(url, {
       headers: {
         'Content-Type': 'application/json',
@@ -84,23 +77,12 @@ export async function fetchTheme(): Promise<Theme | null> {
       },
     });
 
-    console.log('[Theme API] Response status:', response.status);
-
     if (!response.ok) {
-      console.warn(`[Theme API] Failed to fetch theme: ${response.status} ${response.statusText}`);
-      const errorText = await response.text();
-      console.warn('[Theme API] Error response:', errorText);
+      console.warn(`[Theme API] Failed to fetch theme: ${response.status}`);
       return null;
     }
 
     const data: Theme = await response.json();
-    console.log('[Theme API] Theme data received:', {
-      id: data.id,
-      name: data.name,
-      hasGlobalSettings: !!data.globalSettings,
-      hasTokens: !!data.globalSettings?.colors?.tokens
-    });
-    
     return data;
   } catch (error) {
     console.error('[Theme API] Error fetching theme:', error);

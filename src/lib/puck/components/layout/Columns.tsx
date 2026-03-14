@@ -124,7 +124,7 @@ export const Columns: ComponentConfig<ColumnsProps> = {
       : desktopGridClass;
 
     return (
-      <div className={`grid ${responsiveClass} ${gapClasses[gap]} ${alignClasses[alignItems]}`}>
+      <div className={`grid ${responsiveClass} ${gapClasses[gap] || 'gap-8'} ${alignClasses[alignItems] || 'items-start'}`}>
         {Array.from({ length: columns }, (_, i) => (
           <div key={i} className="min-h-[100px]">
             <DropZone zone={`column-${i + 1}`} />

@@ -182,7 +182,7 @@ export const RecentlyViewedProducts: ComponentConfig<RecentlyViewedProductsProps
       };
 
       return (
-        <div className={`w-full ${paddingClasses[containerPadding]}`}>
+        <div className={`w-full ${paddingClasses[containerPadding] || 'px-6 py-12'}`}>
           <div className="max-w-7xl mx-auto">
             {showTitle && (
               <h2 className="text-3xl font-semibold text-gray-900 mb-8">

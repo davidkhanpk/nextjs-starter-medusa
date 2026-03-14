@@ -43,8 +43,6 @@ export default async function Home(props: {
     )
   }
 
-  console.log("Homepage Puck Data:", homepage.puckData)
-
   // Render using Puck
   return <PuckRenderer data={homepage.puckData} />
 }

@@ -131,7 +131,7 @@ export const CountdownTimer: React.FC<CountdownTimerProps> = ({
   }
 
   return (
-    <div style={{ backgroundColor }} className={`w-full ${spacingClasses[spacing]}`}>
+    <div style={{ backgroundColor }} className={`w-full ${spacingClasses[spacing] || 'py-10 px-6'}`}>
       <div className="max-w-7xl mx-auto text-center px-4">
         {/* Header */}
         <h2 className="text-3xl md:text-5xl font-bold mb-2" style={{ color: textColor }}>

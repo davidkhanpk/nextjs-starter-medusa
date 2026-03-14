@@ -123,7 +123,7 @@ export const Copyright: ComponentConfig<CopyrightProps> = {
       >
         <div className="container mx-auto px-4">
           <p 
-            className={`${alignmentClasses[alignment]} ${fontSizeClasses[fontSize]}`}
+            className={`${alignmentClasses[alignment] || 'text-center'} ${fontSizeClasses[fontSize] || 'text-sm'}`}
             style={{ color: textColor }}
           >
             {showYear && `© ${currentYear} `}

@@ -121,7 +121,7 @@ export const WishlistButton: ComponentConfig<WishlistButtonProps> = {
 
     const heartIcon = (
       <Heart
-        className={`${iconSizeClasses[size]} ${isInWishlist ? "fill-current" : ""}`}
+        className={`${iconSizeClasses[size] || 'w-5 h-5'} ${isInWishlist ? "fill-current" : ""}`}
       />
     );
 
@@ -138,8 +138,8 @@ export const WishlistButton: ComponentConfig<WishlistButtonProps> = {
           inline-flex items-center justify-center gap-2
           font-medium rounded-lg
           transition-all duration-200
-          ${style === "icon-only" ? "p-2" : sizeClasses[size]}
-          ${styleClasses[style]}
+          ${style === "icon-only" ? "p-2" : (sizeClasses[size] || 'px-4 py-2 text-base')}
+          ${styleClasses[style] || 'bg-gray-100 text-gray-700 hover:bg-gray-200'}
         `}
         aria-label={buttonLabel}
         title={buttonLabel}

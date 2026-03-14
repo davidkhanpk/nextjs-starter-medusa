@@ -237,12 +237,12 @@ export const Heading: ComponentConfig<HeadingProps> = {
       <>
         <Tag
           className={`
-            ${sizeClass}
-            ${weightClasses[fontWeight]}
-            ${alignClasses[textAlign]}
-            ${lineHeightClasses[lineHeight]}
-            ${letterSpacingClasses[letterSpacing]}
-            ${animationClasses[animation]}
+            ${sizeClass || ''}
+            ${weightClasses[fontWeight] || 'font-semibold'}
+            ${alignClasses[textAlign] || 'text-left'}
+            ${lineHeightClasses[lineHeight] || 'leading-normal'}
+            ${letterSpacingClasses[letterSpacing] || 'tracking-normal'}
+            ${animationClasses[animation] || ''}
           `}
           style={{
             color: props.color ? resolveColor(props.color) : undefined,

@@ -56,7 +56,7 @@ export const Section: ComponentConfig<SectionProps> = {
     };
 
     return (
-      <section className={`w-full ${paddingClasses[paddingY]} ${bgClasses[backgroundColor]}`}>
+      <section className={`w-full ${paddingClasses[paddingY] || 'py-8'} ${bgClasses[backgroundColor] || 'bg-transparent'}`}>
         {children}
       </section>
     );

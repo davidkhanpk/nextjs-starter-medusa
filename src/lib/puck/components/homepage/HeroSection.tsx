@@ -255,7 +255,7 @@ export const HeroSection: ComponentConfig<HeroSectionProps> = {
     
     return (
       <div
-        className={`hero-section relative ${heightClasses[props.height]} overflow-hidden`}
+        className={`hero-section relative ${heightClasses[props.height] || 'h-[500px]'} overflow-hidden`}
         style={backgroundStyle}
       >
         {/* Background Image */}
@@ -280,7 +280,7 @@ export const HeroSection: ComponentConfig<HeroSectionProps> = {
                 : props.imagePosition === "right"
                 ? "flex-row"
                 : "flex-col"
-            } gap-8 ${textAlignClasses[props.contentAlignment]} ${flexAlignment}`}
+            } gap-8 ${textAlignClasses[props.contentAlignment] || 'text-center'} ${flexAlignment}`}
           >
             {/* Content Column */}
             <div className={`flex flex-col ${contentJustify} ${contentItemsAlign[props.contentAlignment]} ${props.imagePosition !== "background" ? "w-1/2" : "w-full"}`}>

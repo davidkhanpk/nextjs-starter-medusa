@@ -127,7 +127,7 @@ export const ProductPrice: ComponentConfig<ProductPriceProps> = {
 
     return (
       <div className={layoutClasses}>
-        <span className={`${sizeClasses[fontSize]} ${colorClasses[color]} ${weightClasses[fontWeight]}`}>
+        <span className={`${sizeClasses[fontSize] || 'text-xl'} ${colorClasses[color] || 'text-black'} ${weightClasses[fontWeight] || 'font-semibold'}`}>
           {priceData.calculated_price}
         </span>
         

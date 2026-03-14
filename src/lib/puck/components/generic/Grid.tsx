@@ -96,7 +96,7 @@ export const Grid: ComponentConfig<GridProps> = {
     return (
       <div
         id={id}
-        className={`grid ${mobileColumnClasses[mobileColumns]} ${tabletColumnClasses[tabletColumns]} ${columnClasses[columns]} ${gapClasses[gap]}`}
+        className={`grid ${mobileColumnClasses[mobileColumns] || 'grid-cols-1'} ${tabletColumnClasses[tabletColumns] || 'md:grid-cols-2'} ${columnClasses[columns] || 'lg:grid-cols-3'} ${gapClasses[gap] || 'gap-6'}`}
       >
         {renderDropZone('items')}
       </div>

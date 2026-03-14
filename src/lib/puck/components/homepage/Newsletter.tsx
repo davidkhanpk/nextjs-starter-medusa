@@ -204,14 +204,14 @@ export const Newsletter: ComponentConfig<NewsletterProps> = {
         style={{ backgroundColor: props.backgroundColor }}
       >
         <div className="container mx-auto px-4">
-          <div className={layoutClasses[props.layout]}>
+          <div className={layoutClasses[props.layout] || 'text-center max-w-2xl mx-auto'}>
             {/* Image (for split layout) */}
             {props.layout === "split" && props.showImage && (
               <div className="w-1/2">
                 <img
                   src={props.imageUrl}
                   alt="Newsletter"
-                  className={`w-full h-auto ${radiusClasses[props.borderRadius]}`}
+                  className={`w-full h-auto ${radiusClasses[props.borderRadius] || 'rounded-lg'}`}
                 />
               </div>
             )}
@@ -252,7 +252,7 @@ export const Newsletter: ComponentConfig<NewsletterProps> = {
                     type="text"
                     placeholder="Your name"
                     required={props.nameRequired}
-                    className={`w-full px-4 py-3 ${radiusClasses[props.borderRadius]} border-2`}
+                    className={`w-full px-4 py-3 ${radiusClasses[props.borderRadius] || 'rounded-lg'} border-2`}
                     style={{
                       backgroundColor: props.inputBackground,
                       borderColor: props.inputBorder,
@@ -266,7 +266,7 @@ export const Newsletter: ComponentConfig<NewsletterProps> = {
                     type="email"
                     placeholder={props.placeholderText}
                     required
-                    className={`${props.layout === "inline" ? "flex-1" : "w-full"} px-4 py-3 ${radiusClasses[props.borderRadius]} border-2`}
+                    className={`${props.layout === "inline" ? "flex-1" : "w-full"} px-4 py-3 ${radiusClasses[props.borderRadius] || 'rounded-lg'} border-2`}
                     style={{
                       backgroundColor: props.inputBackground,
                       borderColor: props.inputBorder,
@@ -276,7 +276,7 @@ export const Newsletter: ComponentConfig<NewsletterProps> = {
                   {/* Submit Button */}
                   <button
                     type="submit"
-                    className={`${props.layout === "inline" ? "" : "w-full"} px-8 py-3 font-semibold ${radiusClasses[props.borderRadius]} hover:opacity-90 transition`}
+                    className={`${props.layout === "inline" ? "" : "w-full"} px-8 py-3 font-semibold ${radiusClasses[props.borderRadius] || 'rounded-lg'} hover:opacity-90 transition`}
                     style={{
                       backgroundColor: props.buttonBackground,
                       color: props.buttonTextColor,

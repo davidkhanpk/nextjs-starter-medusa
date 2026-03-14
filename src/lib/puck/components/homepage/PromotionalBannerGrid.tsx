@@ -1,5 +1,6 @@
 'use client'
 
+import { ComponentConfig } from '@measured/puck'
 import React from 'react'
 import Link from '@/components/common/SafeLink'
 
@@ -24,7 +25,7 @@ export interface PromotionalBannerGridProps {
   minHeight: string
 }
 
-export const PromotionalBannerGrid: React.FC<PromotionalBannerGridProps> = ({
+const PromotionalBannerGridRender: React.FC<PromotionalBannerGridProps> = ({
   title,
   subtitle,
   layout,
@@ -91,22 +92,26 @@ export const PromotionalBannerGrid: React.FC<PromotionalBannerGridProps> = ({
         )}
 
         {/* Banner Grid */}
-        <div className={`grid ${getGridClasses()} ${spacingClasses[spacing]}`}>
-          {banners.map((banner, index) => {
+        <div className={`grid ${getGridClasses()} ${spacingClasses[spacing] || 'gap-4'}`}>
+          {(banners || []).map((banner, index) => {
             const isLarge = (layout === '1-2-split' && index === 0) || (layout === '2-1-split' && index === 2)
             const colSpan = isLarge ? 'md:col-span-2' : 'md:col-span-1'
             const rowSpan = layout === '1-2-split' && index === 0 ? 'md:row-span-2' : layout === '2-1-split' && index === 2 ? 'md:row-span-2' : ''
+            const bannerId = banner.id || `banner-${index}`
+            const overlayOpacity = typeof banner.overlayOpacity === 'number' ? banner.overlayOpacity : 40
+            const textColor = banner.textColor || '#ffffff'
+            const textPosition = banner.textPosition || 'bottom-left'
 
             return (
               <Link
-                key={banner.id}
-                href={banner.ctaLink}
-                className={`group relative overflow-hidden ${borderRadiusClasses[borderRadius]} ${colSpan} ${rowSpan} ${hoverEffect === 'lift' ? 'transition-transform duration-300' : ''}`}
+                key={bannerId}
+                href={banner.ctaLink || '#'}
+                className={`group relative overflow-hidden ${borderRadiusClasses[borderRadius] || 'rounded-none'} ${colSpan} ${rowSpan} ${hoverEffect === 'lift' ? 'transition-transform duration-300' : ''}`}
                 style={{ minHeight }}
               >
                 {/* Background Image */}
                 <div
-                  className={`absolute inset-0 bg-cover bg-center transition-transform duration-500 ${hoverEffectClasses[hoverEffect]}`}
+                  className={`absolute inset-0 bg-cover bg-center transition-transform duration-500 ${hoverEffectClasses[hoverEffect] || ''}`}
                   style={{
                     backgroundImage: `url(${banner.imageUrl})`,
                   }}
@@ -117,21 +122,21 @@ export const PromotionalBannerGrid: React.FC<PromotionalBannerGridProps> = ({
                   className={`absolute inset-0 bg-black transition-opacity duration-300 ${
                     hoverEffect === 'overlay' ? 'group-hover:opacity-60' : ''
                   }`}
-                  style={{ opacity: banner.overlayOpacity / 100 }}
+                  style={{ opacity: overlayOpacity / 100 }}
                 />
 
                 {/* Content */}
-                <div className={`relative h-full flex flex-col p-6 md:p-8 ${positionClasses[banner.textPosition]}`}>
+                <div className={`relative h-full flex flex-col p-6 md:p-8 ${positionClasses[textPosition] || positionClasses['bottom-left']}`}>
                   <div>
                     <h3
                       className="text-2xl md:text-3xl lg:text-4xl font-bold mb-2"
-                      style={{ color: banner.textColor }}
+                      style={{ color: textColor }}
                     >
                       {banner.title}
                     </h3>
                     <p
                       className="text-base md:text-lg mb-4"
-                      style={{ color: banner.textColor }}
+                      style={{ color: textColor }}
                     >
                       {banner.subtitle}
                     </p>
@@ -149,6 +154,116 @@ export const PromotionalBannerGrid: React.FC<PromotionalBannerGridProps> = ({
       </div>
     </div>
   )
+}
+
+export const PromotionalBannerGrid: ComponentConfig<PromotionalBannerGridProps> = {
+  label: 'Promotional Banner Grid',
+
+  fields: {
+    title: { type: 'text', label: 'Title' },
+    subtitle: { type: 'text', label: 'Subtitle' },
+    layout: {
+      type: 'select',
+      label: 'Layout',
+      options: [
+        { label: '2 Column', value: '2-column' },
+        { label: '3 Column', value: '3-column' },
+        { label: '1-2 Split', value: '1-2-split' },
+        { label: '2-1 Split', value: '2-1-split' },
+      ],
+    },
+    spacing: {
+      type: 'select',
+      label: 'Spacing',
+      options: [
+        { label: 'None', value: 'none' },
+        { label: 'Small', value: 'sm' },
+        { label: 'Medium', value: 'md' },
+        { label: 'Large', value: 'lg' },
+      ],
+    },
+    banners: {
+      type: 'array',
+      label: 'Banners',
+      arrayFields: {
+        title: { type: 'text', label: 'Title' },
+        subtitle: { type: 'text', label: 'Subtitle' },
+        imageUrl: { type: 'text', label: 'Image URL' },
+        ctaText: { type: 'text', label: 'CTA Text' },
+        ctaLink: { type: 'text', label: 'CTA Link' },
+        overlayOpacity: { type: 'number', label: 'Overlay Opacity', min: 0, max: 100 },
+        textColor: { type: 'text', label: 'Text Color' },
+        textPosition: {
+          type: 'select',
+          label: 'Text Position',
+          options: [
+            { label: 'Top Left', value: 'top-left' },
+            { label: 'Top Center', value: 'top-center' },
+            { label: 'Center', value: 'center' },
+            { label: 'Bottom Left', value: 'bottom-left' },
+            { label: 'Bottom Center', value: 'bottom-center' },
+          ],
+        },
+      },
+    } as any,
+    borderRadius: {
+      type: 'select',
+      label: 'Border Radius',
+      options: [
+        { label: 'None', value: 'none' },
+        { label: 'Small', value: 'sm' },
+        { label: 'Medium', value: 'md' },
+        { label: 'Large', value: 'lg' },
+      ],
+    },
+    hoverEffect: {
+      type: 'select',
+      label: 'Hover Effect',
+      options: [
+        { label: 'Zoom', value: 'zoom' },
+        { label: 'Overlay', value: 'overlay' },
+        { label: 'Lift', value: 'lift' },
+        { label: 'None', value: 'none' },
+      ],
+    },
+    minHeight: { type: 'text', label: 'Min Height (e.g. 300px)' },
+  },
+
+  defaultProps: {
+    title: '',
+    subtitle: '',
+    layout: '2-column',
+    spacing: 'md',
+    banners: [
+      {
+        id: '1',
+        title: 'New Collection',
+        subtitle: 'Shop the latest styles',
+        imageUrl: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=600&h=400&fit=crop',
+        ctaText: 'Shop Now',
+        ctaLink: '/store',
+        overlayOpacity: 40,
+        textColor: '#ffffff',
+        textPosition: 'bottom-left',
+      },
+      {
+        id: '2',
+        title: 'Best Sellers',
+        subtitle: 'Top-rated products',
+        imageUrl: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&h=400&fit=crop',
+        ctaText: 'Explore',
+        ctaLink: '/store',
+        overlayOpacity: 40,
+        textColor: '#ffffff',
+        textPosition: 'bottom-left',
+      },
+    ],
+    borderRadius: 'md',
+    hoverEffect: 'zoom',
+    minHeight: '300px',
+  },
+
+  render: (props) => <PromotionalBannerGridRender {...props} />,
 }
 
 export default PromotionalBannerGrid

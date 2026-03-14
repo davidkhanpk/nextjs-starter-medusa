@@ -226,13 +226,13 @@ export const QuantitySelector: ComponentConfig<QuantitySelectorProps> = {
             {labelText}
           </label>
         )}
-        <div className={`inline-flex items-center ${containerBorderClasses[style]} bg-white overflow-hidden hover:border-gray-400 focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-opacity-20 transition-all duration-200`}>
+        <div className={`inline-flex items-center ${containerBorderClasses[style] || 'border border-gray-300 rounded-lg shadow-sm'} bg-white overflow-hidden hover:border-gray-400 focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-opacity-20 transition-all duration-200`}>
           <button
             type="button"
             onClick={decrement}
             disabled={quantity <= minQuantity}
             className={`
-              ${buttonSizeClasses[size]}
+              ${buttonSizeClasses[size] || 'w-10 h-10'}
               flex items-center justify-center
               text-gray-600 hover:text-gray-900 hover:bg-gray-100
               disabled:opacity-30 disabled:cursor-not-allowed
@@ -242,7 +242,7 @@ export const QuantitySelector: ComponentConfig<QuantitySelectorProps> = {
             `}
             aria-label="Decrease quantity"
           >
-            <Minus className={iconSizeClasses[size]} />
+            <Minus className={iconSizeClasses[size] || 'w-4 h-4'} />
           </button>
 
           <input
@@ -252,7 +252,7 @@ export const QuantitySelector: ComponentConfig<QuantitySelectorProps> = {
             min={minQuantity}
             max={maxQuantity}
             className={`
-              ${sizeClasses[size]}
+              ${sizeClasses[size] || 'h-10 text-base'}
               w-16 text-center font-semibold text-gray-900
               border-none focus:outline-none
               appearance-none bg-transparent
@@ -267,7 +267,7 @@ export const QuantitySelector: ComponentConfig<QuantitySelectorProps> = {
             onClick={increment}
             disabled={quantity >= maxQuantity}
             className={`
-              ${buttonSizeClasses[size]}
+              ${buttonSizeClasses[size] || 'w-10 h-10'}
               flex items-center justify-center
               text-gray-600 hover:text-gray-900 hover:bg-gray-100
               disabled:opacity-30 disabled:cursor-not-allowed
@@ -277,7 +277,7 @@ export const QuantitySelector: ComponentConfig<QuantitySelectorProps> = {
             `}
             aria-label="Increase quantity"
           >
-            <Plus className={iconSizeClasses[size]} />
+            <Plus className={iconSizeClasses[size] || 'w-4 h-4'} />
           </button>
         </div>
       </div>

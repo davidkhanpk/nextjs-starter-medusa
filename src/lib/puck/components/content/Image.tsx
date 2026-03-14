@@ -309,12 +309,12 @@ export const Image: ComponentConfig<ImageProps> = {
           src={props.src}
           alt={props.alt}
           className={`
-            ${aspectRatioClasses[props.aspectRatio]}
-            ${objectFitClasses[props.objectFit]}
-            ${widthClasses[props.width]}
-            ${radiusClasses[props.borderRadius]}
-            ${shadowClasses[props.shadow]}
-            ${hoverEffectClasses[props.hoverEffect]}
+            ${aspectRatioClasses[props.aspectRatio] || ''}
+            ${objectFitClasses[props.objectFit] || 'object-cover'}
+            ${widthClasses[props.width] || 'w-full'}
+            ${radiusClasses[props.borderRadius] || 'rounded-md'}
+            ${shadowClasses[props.shadow] || 'shadow-none'}
+            ${hoverEffectClasses[props.hoverEffect] || ''}
             ${props.showBorder ? "border" : ""}
             transition-all duration-300
           `}
@@ -329,7 +329,7 @@ export const Image: ComponentConfig<ImageProps> = {
     
     return (
       <div
-        className={`image-component ${alignmentClasses[props.alignment]}`}
+        className={`image-component ${alignmentClasses[props.alignment] || 'mx-auto'}`}
         style={{
           marginTop: `${props.marginTop}px`,
           marginBottom: `${props.marginBottom}px`,
@@ -337,7 +337,7 @@ export const Image: ComponentConfig<ImageProps> = {
       >
         <div className="image-inner">
           {props.showCaption && props.captionPosition === "top" && (
-            <div className={`caption text-sm text-gray-600 mb-2 ${captionAlignClasses[props.captionAlign]}`}>
+            <div className={`caption text-sm text-gray-600 mb-2 ${captionAlignClasses[props.captionAlign] || 'text-center'}`}>
               {props.caption}
             </div>
           )}
@@ -356,7 +356,7 @@ export const Image: ComponentConfig<ImageProps> = {
           )}
           
           {props.showCaption && props.captionPosition === "bottom" && (
-            <div className={`caption text-sm text-gray-600 mt-2 ${captionAlignClasses[props.captionAlign]}`}>
+            <div className={`caption text-sm text-gray-600 mt-2 ${captionAlignClasses[props.captionAlign] || 'text-center'}`}>
               {props.caption}
             </div>
           )}

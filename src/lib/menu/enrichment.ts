@@ -89,8 +89,6 @@ async function enrichMenuItem(
  */
 export async function enrichMenuWithMedusaData(menu: Menu): Promise<EnrichedMenu> {
   try {
-    console.log('[Menu Enrichment] Starting enrichment for menu:', menu.handle)
-
     // Fetch all categories and collections in parallel
     const [categoriesResponse, collectionsResponse] = await Promise.all([
       listCategories({ limit: 100 }), // Fetch more categories for mega menus
@@ -99,11 +97,6 @@ export async function enrichMenuWithMedusaData(menu: Menu): Promise<EnrichedMenu
 
     const categories = categoriesResponse?.product_categories || []
     const collections = collectionsResponse?.collections || []
-
-    console.log('[Menu Enrichment] Fetched:', {
-      categories: categories.length,
-      collections: collections.length
-    })
 
     // Enrich all menu items
     const enrichedItems = await Promise.all(
@@ -115,7 +108,6 @@ export async function enrichMenuWithMedusaData(menu: Menu): Promise<EnrichedMenu
       items: enrichedItems
     }
 
-    console.log('[Menu Enrichment] Enrichment complete')
     return enrichedMenu
 
   } catch (error) {

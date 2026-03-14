@@ -141,7 +141,7 @@ export const AccountButton: ComponentConfig<AccountButtonProps> = {
       lg: 28,
     };
 
-    const iconSizeValue = sizeMap[iconSize];
+    const iconSizeValue = sizeMap[iconSize] || 24;
 
     const styleClasses = {
       minimal: "p-2 rounded-full hover:bg-gray-100",
@@ -154,7 +154,7 @@ export const AccountButton: ComponentConfig<AccountButtonProps> = {
     return (
       <Link
         href={href}
-        className={`flex items-center gap-2 transition-all ${styleClasses[style]}`}
+        className={`flex items-center gap-2 transition-all ${styleClasses[style] || 'p-2 rounded-full hover:bg-gray-100'}`}
         style={{
           color: isHovered ? hoverColor : iconColor,
           backgroundColor: style === 'filled' ? (isHovered ? hoverColor : iconColor) : 'transparent',

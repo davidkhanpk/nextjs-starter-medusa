@@ -109,7 +109,7 @@ export const Tabs: ComponentConfig<TabsProps> = {
       <div id={id} className="w-full">
         {/* Tab Headers */}
         <div
-          className={`flex ${alignmentClasses[alignment]} gap-2 ${
+          className={`flex ${alignmentClasses[alignment] || 'justify-start'} gap-2 ${
             tabStyle === 'bordered' ? 'border-b border-gray-300 dark:border-gray-700' : ''
           }`}
         >

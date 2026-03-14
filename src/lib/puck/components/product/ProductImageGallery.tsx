@@ -291,7 +291,7 @@ export const ProductImageGallery: ComponentConfig<ProductImageGalleryProps> = {
                   <img
                     src={image.url}
                     alt={`${product.title} - Image ${index + 1}`}
-                    className={`w-full h-full object-${imageFit}`}
+                    className={`w-full h-full object-${imageFit || 'cover'}`}
                     loading={index === 0 ? 'eager' : 'lazy'}
                     draggable={false}
                   />
@@ -465,7 +465,7 @@ export const ProductImageGallery: ComponentConfig<ProductImageGalleryProps> = {
               <img
                 src={image.url}
                 alt={`${product.title} - Image ${index + 1}`}
-                className={`w-full h-full object-${imageFit} transition-transform duration-300 hover:scale-[1.03]`}
+                className={`w-full h-full object-${imageFit || 'cover'} transition-transform duration-300 hover:scale-[1.03]`}
                 loading={index === 0 ? 'eager' : 'lazy'}
                 draggable={false}
               />

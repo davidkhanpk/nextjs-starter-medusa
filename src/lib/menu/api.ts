@@ -68,8 +68,6 @@ export async function fetchMenuByHandle(
   try {
     const apiUrl = getPlatformApiUrl();
     const url = `${apiUrl}/public/menus/${storeId}/${handle}`;
-    
-    console.log('[Menu API] Fetching menu:', url);
 
     const response = await fetch(url, {
       headers: {
@@ -104,9 +102,6 @@ export async function fetchDefaultMenu(
   try {
     const apiUrl = getPlatformApiUrl();
     const url = `${apiUrl}/public/menus/${storeId}/default`;
-    
-    console.log('[Menu API] Fetching default menu:', url);
-    console.log('[Menu API] Store ID:', storeId);
 
     const response = await fetch(url, {
       headers: {
@@ -119,24 +114,12 @@ export async function fetchDefaultMenu(
       },
     });
 
-    console.log('[Menu API] Response status:', response.status);
-
     if (!response.ok) {
-      console.warn(`[Menu API] Failed to fetch default menu: ${response.status} ${response.statusText}`);
-      const errorText = await response.text();
-      console.warn('[Menu API] Error response:', errorText);
+      console.warn(`[Menu API] Failed to fetch default menu: ${response.status}`);
       return null;
     }
 
     const data: Menu = await response.json();
-    console.log('[Menu API] Menu data received:', {
-      id: data.id,
-      name: data.name,
-      handle: data.handle,
-      itemsCount: data.items?.length || 0,
-      isDefault: data.isDefault
-    });
-    console.log('[Menu API] Menu items:', JSON.stringify(data.items, null, 2));
     return data;
   } catch (error) {
     console.error('[Menu API] Error fetching default menu:', error);
@@ -153,12 +136,8 @@ export async function fetchMenu(
 ): Promise<Menu | null> {
   const storeId = getStoreId();
   
-  console.log('[Menu API] fetchMenu called with handle:', menuHandle);
-  console.log('[Menu API] Store ID from env:', storeId);
-  
   if (!storeId) {
     console.error('[Menu API] Store ID not found in environment variables');
-    console.error('[Menu API] Available env vars:', Object.keys(process.env).filter(k => k.includes('STORE')));
     return null;
   }
 
@@ -166,25 +145,12 @@ export async function fetchMenu(
 
   // If menuHandle is provided and not 'default', try to fetch that specific menu
   if (menuHandle && menuHandle !== 'default') {
-    console.log('[Menu API] Attempting to fetch menu by handle:', menuHandle);
     menu = await fetchMenuByHandle(storeId, menuHandle);
   }
 
   // If no menu found or menuHandle is 'default', fetch the default menu
   if (!menu) {
-    console.log('[Menu API] Fetching default menu');
     menu = await fetchDefaultMenu(storeId);
-  }
-
-  if (menu) {
-    console.log('[Menu API] Final menu returned:', {
-      id: menu.id,
-      name: menu.name,
-      handle: menu.handle,
-      itemsCount: menu.items?.length || 0
-    });
-  } else {
-    console.error('[Menu API] No menu found');
   }
 
   return menu;

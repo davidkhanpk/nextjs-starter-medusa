@@ -123,7 +123,7 @@ export const ProductVariantSelector: ComponentConfig<ProductVariantSelectorProps
   },
 
   render: ({ selectorStyle, showLabels, showStock, marginTop, marginBottom, marginLeft, marginRight, paddingX, paddingY }) => {
-    const { product, selectedOptions, setSelectedOptions, setSelectedVariant } = useProduct()
+    const { product, selectedOptions, setSelectedOptions, setSelectedVariant, selectedVariant } = useProduct()
 
     if (!product || !product.variants || product.variants.length === 0) {
       return <div className="text-gray-400 italic">No variants available</div>;

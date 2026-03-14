@@ -130,9 +130,9 @@ export const FlexColumn: ComponentConfig<FlexColumnProps> = {
         style={{
           display: "flex",
           flexDirection: "column",
-          justifyContent: justifyContentMap[justifyContent],
-          alignItems: alignItemsMap[alignItems],
-          gap: gapValues[gap],
+          justifyContent: justifyContentMap[justifyContent] || 'flex-start',
+          alignItems: alignItemsMap[alignItems] || 'stretch',
+          gap: gapValues[gap] || '1rem',
           height: fullHeight ? "100%" : "auto",
           minHeight: fullHeight ? undefined : minHeight || "50px",
           padding,

@@ -119,7 +119,7 @@ export const Accordion: ComponentConfig<AccordionProps> = {
               key={item.id}
               className={`
                 ${bordered ? 'border border-gray-200 dark:border-gray-700' : ''}
-                ${roundedClasses[rounded]}
+                ${roundedClasses[rounded] || 'rounded-md'}
                 overflow-hidden
               `}
             >

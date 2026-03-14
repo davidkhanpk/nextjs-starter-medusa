@@ -159,11 +159,11 @@ export const SocialIcons: ComponentConfig<SocialIconsProps> = {
       minimal: 'rounded-none',
     };
 
-    const { icon: iconSize, padding } = sizeMap[size];
+    const { icon: iconSize, padding } = sizeMap[size] || sizeMap.md;
 
     return (
-      <div className={`flex ${gapClasses[gap]} ${alignmentClasses[alignment]}`}>
-        {links.map((link, index) => {
+      <div className={`flex ${gapClasses[gap] || 'gap-3'} ${alignmentClasses[alignment] || 'justify-center'}`}>
+        {(links || []).map((link, index) => {
           const IconComponent = iconComponents[link.platform];
           
           return (
@@ -173,7 +173,7 @@ export const SocialIcons: ComponentConfig<SocialIconsProps> = {
               target="_blank"
               rel="noopener noreferrer"
               className={`
-                ${padding} ${styleClasses[style]} 
+                ${padding} ${styleClasses[style] || 'rounded-full'} 
                 transition-all duration-200 
                 ${style !== 'minimal' ? 'hover:scale-110' : ''}
               `}

@@ -12,34 +12,22 @@ const getPlatformApiUrl = (): string => {
 };
 
 const getStoreId = (request?: Request): string | null => {
-  console.log('[Template API] Getting store ID...');
-  console.log('[Template API] NODE_ENV:', process.env.NODE_ENV);
-  
   // Always check STORE_ID env var first (set per-container in K8s)
   if (process.env.STORE_ID) {
-    console.log('[Template API] Using STORE_ID from env:', process.env.STORE_ID);
     return process.env.STORE_ID;
   }
 
   // Fallback: Extract from request headers (subdomain)
   if (request) {
     const host = request.headers.get('host') || '';
-    console.log('[Template API] Extracting from request host:', host);
-    const subdomain = extractSubdomain(host);
-    console.log('[Template API] Extracted subdomain:', subdomain);
-    return subdomain;
+    return extractSubdomain(host);
   }
 
   // Fallback: Client-side extract from window.location
   if (typeof window !== 'undefined') {
-    const hostname = window.location.hostname;
-    console.log('[Template API] Extracting from window.location.hostname:', hostname);
-    const subdomain = extractSubdomain(hostname);
-    console.log('[Template API] Extracted subdomain:', subdomain);
-    return subdomain;
+    return extractSubdomain(window.location.hostname);
   }
 
-  console.log('[Template API] Could not determine store ID');
   return null;
 };
 
@@ -69,13 +57,6 @@ export async function fetchTemplateByStoreId(
   try {
     const apiUrl = getPlatformApiUrl();
     const url = `${apiUrl}/public/templates/${storeId}/${templateType}`;
-    
-    console.log('[Template API] ===== FETCH TEMPLATE START =====');
-    console.log('[Template API] Store ID:', storeId);
-    console.log('[Template API] Template Type:', templateType);
-    console.log('[Template API] API URL:', apiUrl);
-    console.log('[Template API] Full URL:', url);
-    console.log('[Template API] Environment:', process.env.NODE_ENV);
 
     const response = await fetch(url, {
       headers: {
@@ -88,30 +69,15 @@ export async function fetchTemplateByStoreId(
       },
     });
 
-    console.log('[Template API] Response status:', response.status);
-    console.log('[Template API] Response statusText:', response.statusText);
-    console.log('[Template API] Response ok:', response.ok);
-
     if (!response.ok) {
-      const errorText = await response.text();
-      console.error('[Template API] Error response body:', errorText);
-      console.warn(`[Template API] Failed: ${response.status} ${response.statusText}`);
+      console.warn(`[Template API] Failed to fetch ${templateType}: ${response.status}`);
       return null;
     }
 
     const data: TemplateResponse = await response.json();
-    console.log('[Template API] Response data keys:', Object.keys(data));
-    console.log('[Template API] Has puckData:', !!data.puckData);
-    console.log('[Template API] Template status:', data.status);
-    console.log('[Template API] Is default:', data.isDefault);
-    console.log('[Template API] ===== FETCH TEMPLATE END =====');
-    
     return data;
   } catch (error) {
-    console.error('[Template API] ===== FETCH TEMPLATE ERROR =====');
-    console.error('[Template API] Error:', error);
-    console.error('[Template API] Error message:', error instanceof Error ? error.message : 'Unknown error');
-    console.error('[Template API] Error stack:', error instanceof Error ? error.stack : 'No stack trace');
+    console.error(`[Template API] Error fetching ${templateType}:`, error instanceof Error ? error.message : error);
     return null;
   }
 }
@@ -127,7 +93,7 @@ export async function fetchTemplateBySubdomain(
     const apiUrl = getPlatformApiUrl();
     const url = `${apiUrl}/public/templates/subdomain/${subdomain}/${templateType}`;
     
-    console.log('[Template API] Fetching by subdomain:', url);
+
 
     const response = await fetch(url, {
       headers: {
@@ -161,22 +127,13 @@ export async function fetchTemplate(
   templateType: TemplateType,
   request?: Request,
 ): Promise<TemplateResponse | null> {
-  console.log('[Template API] ===== FETCHING TEMPLATE =====');
-  console.log('[Template API] Template type requested:', templateType);
-  
   const storeId = getStoreId(request);
   
   if (!storeId) {
-    console.warn('[Template API] ❌ No store ID found - cannot fetch template');
-    console.warn('[Template API] STORE_ID env var:', process.env.STORE_ID);
-    console.warn('[Template API] NODE_ENV:', process.env.NODE_ENV);
+    console.warn('[Template API] No store ID found');
     return null;
   }
 
-  console.log('[Template API] ✅ Store ID found:', storeId);
-  console.log('[Template API] Calling fetchTemplateByStoreId...');
-  
-  // Always use store ID endpoint (subdomain logic removed)
   return fetchTemplateByStoreId(storeId, templateType);
 }
 

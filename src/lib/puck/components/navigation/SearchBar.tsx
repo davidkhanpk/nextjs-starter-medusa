@@ -225,9 +225,9 @@ export const SearchBar: ComponentConfig<SearchBarProps> = {
               placeholder={placeholder}
               className={`
                 w-full transition-all duration-200
-                ${sizeClasses[size]}
-                ${radiusClasses[borderRadius]}
-                ${styleClasses[style]}
+                ${sizeClasses[size] || 'px-4 py-2.5 text-base'}
+                ${radiusClasses[borderRadius] || 'rounded-lg'}
+                ${styleClasses[style] || 'border-2'}
                 ${showIcon && iconPosition === 'left' ? 'pl-10' : ''}
                 ${showIcon && iconPosition === 'right' ? 'pr-10' : ''}
                 focus:outline-none

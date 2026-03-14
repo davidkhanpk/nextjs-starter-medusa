@@ -82,7 +82,7 @@ export const SearchIcon: ComponentConfig<SearchIconProps> = {
       lg: 28,
     };
 
-    const iconSizeValue = sizeMap[iconSize];
+    const iconSizeValue = sizeMap[iconSize] || 24;
 
     const styleClasses = {
       minimal: "p-2 rounded-full hover:bg-gray-100",
@@ -94,7 +94,7 @@ export const SearchIcon: ComponentConfig<SearchIconProps> = {
       <>
         <button
           onClick={handleClick}
-          className={`transition-all ${styleClasses[style]}`}
+          className={`transition-all ${styleClasses[style] || 'p-2 rounded-full hover:bg-gray-100'}`}
           style={{
             color: isHovered ? hoverColor : iconColor,
             backgroundColor: style === 'filled' ? (isHovered ? hoverColor : iconColor) : 'transparent',

@@ -191,11 +191,11 @@ export const ProductAccordion: ComponentConfig<ProductAccordionProps> = {
           defaultValue={defaultOpenArray}
           className="w-full"
         >
-          {sections.map((section) => (
+          {(sections || []).map((section) => (
             <AccordionPrimitive.Item
               key={section.id}
               value={section.id}
-              className={`${borderClasses[borderStyle]} border-gray-200 py-4`}
+              className={`${borderClasses[borderStyle] || 'border-t'} border-gray-200 py-4`}
             >
               <AccordionPrimitive.Header>
                 <AccordionPrimitive.Trigger className="flex w-full items-center justify-between text-left hover:text-gray-600 transition-colors group">
@@ -221,11 +221,11 @@ export const ProductAccordion: ComponentConfig<ProductAccordionProps> = {
         collapsible
         className="w-full"
       >
-        {sections.map((section) => (
+        {(sections || []).map((section) => (
           <AccordionPrimitive.Item
             key={section.id}
             value={section.id}
-            className={`${borderClasses[borderStyle]} border-gray-200 py-4`}
+            className={`${borderClasses[borderStyle] || 'border-t'} border-gray-200 py-4`}
           >
             <AccordionPrimitive.Header>
               <AccordionPrimitive.Trigger className="flex w-full items-center justify-between text-left hover:text-gray-600 transition-colors group">

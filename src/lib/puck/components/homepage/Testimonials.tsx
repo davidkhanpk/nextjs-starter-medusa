@@ -341,7 +341,7 @@ export const Testimonials: ComponentConfig<TestimonialsProps> = {
     const renderTestimonial = (testimonial: any) => (
       <div
         key={testimonial.id}
-        className={`testimonial-card p-6 ${radiusClasses[props.borderRadius]} shadow-lg`}
+        className={`testimonial-card p-6 ${radiusClasses[props.borderRadius] || 'rounded-lg'} shadow-lg`}
         style={{ backgroundColor: props.cardBackground }}
       >
         {/* Rating */}

@@ -232,7 +232,7 @@ export const Video: ComponentConfig<VideoProps> = {
     
     return (
       <div
-        className={`video-component ${alignmentClasses[props.alignment]}`}
+        className={`video-component ${alignmentClasses[props.alignment] || 'mx-auto'}`}
         style={{
           width: props.width === "custom" ? props.customWidth : "100%",
           marginTop: `${props.marginTop}px`,
@@ -240,7 +240,7 @@ export const Video: ComponentConfig<VideoProps> = {
         }}
       >
         <div
-          className={`video-wrapper relative overflow-hidden ${radiusClasses[props.borderRadius]} ${shadowClasses[props.shadow]}`}
+          className={`video-wrapper relative overflow-hidden ${radiusClasses[props.borderRadius] || 'rounded-md'} ${shadowClasses[props.shadow] || 'shadow-none'}`}
           style={{
             aspectRatio: props.aspectRatio,
           }}
