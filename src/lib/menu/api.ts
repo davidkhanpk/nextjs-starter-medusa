@@ -45,7 +45,7 @@ export interface Menu {
 }
 
 const getPlatformApiUrl = (): string => {
-  return process.env.SHOPIKOOL_API_URL || 'http://localhost:3000/api';
+  return process.env.LAUNCHSTORE_API_URL || 'http://localhost:3000/api';
 };
 
 const getStoreId = (): string | null => {

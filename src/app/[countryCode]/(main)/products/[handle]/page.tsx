@@ -5,6 +5,7 @@ import { getRegion, listRegions } from "@lib/data/regions"
 import ProductTemplate from "@modules/products/templates"
 import { HttpTypes } from "@medusajs/types"
 import { fetchTemplate } from "@lib/template/api"
+import { fetchStoreInfo } from "@lib/store/api"
 
 // Force dynamic rendering — this page uses cookies() and searchParams
 export const dynamic = 'force-dynamic'
@@ -47,21 +48,27 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
       notFound()
     }
 
-    const product = await listProducts({
-      countryCode: params.countryCode,
-      queryParams: { handle },
-    }).then(({ response }) => response.products[0])
+    const [product, storeInfo] = await Promise.all([
+      listProducts({
+        countryCode: params.countryCode,
+        queryParams: { handle },
+      }).then(({ response }) => response.products[0]),
+      fetchStoreInfo().catch(() => null),
+    ])
 
     if (!product) {
       notFound()
     }
 
+    const storeName = storeInfo?.name || 'Store'
+    const productDescription = product.description || product.title
+
     return {
-      title: `${product.title} | Medusa Store`,
-      description: `${product.title}`,
+      title: product.title,
+      description: productDescription,
       openGraph: {
-        title: `${product.title} | Medusa Store`,
-        description: `${product.title}`,
+        title: `${product.title} | ${storeName}`,
+        description: productDescription,
         images: product.thumbnail ? [product.thumbnail] : [],
       },
     }

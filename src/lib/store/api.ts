@@ -7,6 +7,9 @@ export interface StoreInfo {
   id: string
   name: string
   logo: string | null
+  favicon: string | null
+  metaTitle: string | null
+  metaDescription: string | null
 }
 
 /**

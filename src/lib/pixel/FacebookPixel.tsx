@@ -22,7 +22,7 @@ export default function FacebookPixel({ storeId }: FacebookPixelProps) {
       try {
         // Fetch pixel code from backend
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_SHOPIKOOL_API_URL || process.env.SHOPIKOOL_API_URL}/marketing/facebook-pixel/code/${storeId}`
+          `${process.env.NEXT_PUBLIC_LAUNCHSTORE_API_URL || process.env.LAUNCHSTORE_API_URL}/marketing/facebook-pixel/code/${storeId}`
         )
         
         if (!response.ok) {

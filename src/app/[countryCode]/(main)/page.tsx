@@ -9,10 +9,9 @@ export async function generateMetadata(props: {
   const homepage = await getDefaultHomepage()
 
   return {
-    title: homepage?.metaTitle || "Medusa Next.js Starter Template",
-    description:
-      homepage?.metaDescription ||
-      "A performant frontend ecommerce starter template with Next.js 15 and Medusa.",
+    // Omit keys when null so Next.js inherits layout's title.default and description
+    ...(homepage?.metaTitle && { title: homepage.metaTitle }),
+    ...(homepage?.metaDescription && { description: homepage.metaDescription }),
   }
 }
 

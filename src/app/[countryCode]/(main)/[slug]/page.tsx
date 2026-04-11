@@ -11,7 +11,7 @@ interface PageProps {
 
 // Get page data by slug
 async function getPageBySlug(slug: string) {
-  const backendUrl = process.env.SHOPIKOOL_API_URL || 'http://localhost:3000'
+  const backendUrl = process.env.LAUNCHSTORE_API_URL || 'http://localhost:3000'
   const storeId = process.env.STORE_ID
 
   if (!storeId) {

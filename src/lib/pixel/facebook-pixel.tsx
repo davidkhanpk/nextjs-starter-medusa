@@ -21,7 +21,7 @@ export default function FacebookPixel({ storeId }: FacebookPixelProps) {
     // Fetch pixel configuration from backend
     const fetchPixelConfig = async () => {
       try {
-        const response = await fetch(`${process.env.SHOPIKOOL_API_URL}/marketing/facebook-pixel/config/${storeId}`);
+        const response = await fetch(`${process.env.LAUNCHSTORE_API_URL}/marketing/facebook-pixel/config/${storeId}`);
         
         if (!response.ok) {
           throw new Error('Failed to fetch pixel config');

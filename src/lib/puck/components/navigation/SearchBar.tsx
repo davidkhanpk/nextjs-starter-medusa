@@ -3,7 +3,7 @@
 import React from "react";
 import { ComponentConfig } from "@measured/puck";
 import { Search, X } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 
 export interface SearchBarProps {
   placeholder: string;
@@ -155,6 +155,8 @@ export const SearchBar: ComponentConfig<SearchBarProps> = {
     popularSearches,
   }) => {
     const router = useRouter();
+    const params = useParams();
+    const countryCode = (params?.countryCode as string) || 'us';
     const [query, setQuery] = React.useState("");
     const [isFocused, setIsFocused] = React.useState(false);
     const inputRef = React.useRef<HTMLInputElement>(null);
@@ -163,7 +165,7 @@ export const SearchBar: ComponentConfig<SearchBarProps> = {
       e.preventDefault();
       if (query.trim()) {
         // Medusa pattern: Use URL query params for search
-        router.push(`/store?q=${encodeURIComponent(query.trim())}`);
+        router.push(`/${countryCode}/search?q=${encodeURIComponent(query.trim())}`);
         setQuery("");
         setIsFocused(false);
       }
@@ -171,7 +173,7 @@ export const SearchBar: ComponentConfig<SearchBarProps> = {
 
     const handlePopularSearch = (term: string) => {
       setQuery(term);
-      router.push(`/store?q=${encodeURIComponent(term)}`);
+      router.push(`/${countryCode}/search?q=${encodeURIComponent(term)}`);
       setIsFocused(false);
     };
 

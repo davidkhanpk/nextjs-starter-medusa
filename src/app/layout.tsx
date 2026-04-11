@@ -6,10 +6,28 @@ import FacebookPixel from "@lib/pixel/FacebookPixel"
 import { ThemeInjector } from "@/components/theme/ThemeInjector"
 import { generateThemeStyleTag } from "@lib/theme/generate-theme-css"
 import { fetchTheme } from "@lib/theme/api"
+import { fetchStoreInfo } from "@lib/store/api"
 import "../styles/globals.css"
 
-export const metadata: Metadata = {
-  metadataBase: new URL(getBaseURL()),
+export async function generateMetadata(): Promise<Metadata> {
+  const storeInfo = await fetchStoreInfo().catch(() => null)
+  const storeName = storeInfo?.name || "Store"
+  const favicon = storeInfo?.favicon
+
+  return {
+    metadataBase: new URL(getBaseURL()),
+    title: {
+      default: storeInfo?.metaTitle || storeName,
+      template: `%s | ${storeName}`,
+    },
+    description: storeInfo?.metaDescription || undefined,
+    ...(favicon && {
+      icons: {
+        icon: favicon,
+        apple: favicon,
+      },
+    }),
+  }
 }
 
 export default async function RootLayout(props: { children: React.ReactNode }) {

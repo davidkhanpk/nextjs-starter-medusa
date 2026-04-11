@@ -31,6 +31,7 @@ import { ProductMetadata } from "./components/product/ProductMetadata";
 import { StockIndicator } from "./components/product/StockIndicator";
 import { WishlistButton } from "./components/product/WishlistButton";
 import { ProductReviews } from "./components/product/ProductReviews";
+import { ProductRating } from "./components/product/ProductRating";
 
 // Import homepage components
 import { HeroSection } from "./components/homepage/HeroSection";
@@ -194,6 +195,7 @@ const ALL_COMPONENTS = {
   StockIndicator: { ...StockIndicator, category: COMPONENT_CATEGORIES.PRODUCT },
   WishlistButton: { ...WishlistButton, category: COMPONENT_CATEGORIES.PRODUCT },
   ProductReviews: { ...ProductReviews, category: COMPONENT_CATEGORIES.PRODUCT },
+  ProductRating: { ...ProductRating, category: COMPONENT_CATEGORIES.PRODUCT },
   
   // Homepage components
   HeroSection: { ...HeroSection, category: COMPONENT_CATEGORIES.HOMEPAGE },

@@ -70,7 +70,7 @@ export function usePixelTracking({ storeId, enabled = true }: UsePixelTrackingOp
 // Send event to backend for server-side Conversions API
 async function sendServerEvent(storeId: string, eventName: string, params: any) {
   try {
-    await fetch(`${process.env.SHOPIKOOL_API_URL}/marketing/facebook-pixel/events`, {
+    await fetch(`${process.env.LAUNCHSTORE_API_URL}/marketing/facebook-pixel/events`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

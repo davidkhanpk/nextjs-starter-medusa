@@ -12,11 +12,11 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // TODO: Integrate with Shopikool backend to store newsletter subscription
+    // TODO: Integrate with LaunchStore backend to store newsletter subscription
     // For now, we'll log it and return success
     
-    // Option 1: Call Shopikool backend API
-    const shopikoolBackend = process.env.SHOPIKOOL_BACKEND_URL || 'http://localhost:3001'
+    // Option 1: Call LaunchStore backend API
+    const shopikoolBackend = process.env.LAUNCHSTORE_BACKEND_URL || 'http://localhost:3001'
     
     try {
       const response = await fetch(`${shopikoolBackend}/api/newsletter/subscribe`, {

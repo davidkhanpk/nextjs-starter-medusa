@@ -30,7 +30,7 @@ export default async function Checkout() {
   // Fetch CHECKOUT_PAGE template from Shopikool backend
   console.log('[Checkout Page] Fetching CHECKOUT_PAGE template...')
   console.log('[Checkout Page] Store ID:', process.env.STORE_ID)
-  console.log('[Checkout Page] API URL:', process.env.SHOPIKOOL_API_URL)
+  console.log('[Checkout Page] API URL:', process.env.LAUNCHSTORE_API_URL)
   
   const checkoutTemplate = await fetchTemplate('CHECKOUT_PAGE').catch((error) => {
     console.error('[Checkout Page] Failed to fetch CHECKOUT_PAGE template:', error)

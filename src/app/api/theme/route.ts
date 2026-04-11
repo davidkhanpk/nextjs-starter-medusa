@@ -23,8 +23,8 @@ export async function GET(request: Request) {
       return NextResponse.json({ theme: defaultTheme });
     }
 
-    // Fetch from Shopikool Platform (PUBLIC endpoint - no auth required)
-    const platformApiUrl = process.env.SHOPIKOOL_API_URL || 'http://localhost:3000/api';
+    // Fetch from LaunchStore Platform (PUBLIC endpoint - no auth required)
+    const platformApiUrl = process.env.LAUNCHSTORE_API_URL || 'http://localhost:3000/api';
     const themeUrl = `${platformApiUrl}/public/stores/id/${storeId}/theme`;
     
     const response = await fetch(themeUrl, {
